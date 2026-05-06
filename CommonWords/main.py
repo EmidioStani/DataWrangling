@@ -3,12 +3,12 @@ Common words in PDF file
 Author: Gerhard Kling
 """
 
-from rank import word_rank
+from rank2 import word_rank
 
 #Arguments
-file_name = "MS_2019.pdf"
+file_name = "STR.pdf"
 
 #Call function
-top_words = word_rank(file_name, 30)
+top_words = word_rank(file_name, 50)
 
-print(top_words)
+#print(top_words)

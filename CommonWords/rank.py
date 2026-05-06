@@ -35,7 +35,7 @@ def word_rank(file_name: str, top_num: int = 10):
   	
   	#Remove symbols
 	all_words_alnum = [word for word in all_words if word.isalnum()]
-	ignore_list = ['The', 'year', 'financial', 'FINANCIAL', 'Marks', 'Spencer']
+	ignore_list = []
 	all_words_filtered = [word for word in all_words_alnum if word not in ignore_list]
 
 	#Use Counter class and the most_common method

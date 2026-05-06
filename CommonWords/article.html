@@ -1,0 +1,1589 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+                <link href="lib/tom-select/tom-select.css" rel="stylesheet">
+                <script src="lib/tom-select/tom-select.complete.min.js"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value=""></option>
+                                
+                                    <option value="1 European Union Brussels">1 European Union Brussels</option>
+                                
+                                    <option value="15693/1/23">15693/1/23</option>
+                                
+                                    <option value="Interinstitutional  File">Interinstitutional  File</option>
+                                
+                                    <option value="General Council">General Council</option>
+                                
+                                    <option value="final compromise agreement">final compromise agreement</option>
+                                
+                                    <option value="COUNCIL">COUNCIL</option>
+                                
+                                    <option value="hosts">hosts</option>
+                                
+                                    <option value="competent  authorities">competent  authorities</option>
+                                
+                                    <option value="design">design</option>
+                                
+                                    <option value="Regulation">Regulation</option>
+                                
+                                    <option value="EEA relevance">EEA relevance</option>
+                                
+                                    <option value="EUROPEAN UNION">EUROPEAN UNION</option>
+                                
+                                    <option value="internal European market">internal European market</option>
+                                
+                                    <option value="2000/31 Digital EC">2000/31 Digital EC</option>
+                                
+                                    <option value="registration procedures">registration procedures</option>
+                                
+                                    <option value="sized Commission enterprises">sized Commission enterprises</option>
+                                
+                                    <option value="European Council11">European Council11</option>
+                                
+                                    <option value="95/46 European EC">95/46 European EC</option>
+                                
+                                    <option value="European Council Directive">European Council Directive</option>
+                                
+                                    <option value="Such  penalties">Such  penalties</option>
+                                
+                                    <option value="electronic Internal commerce">electronic Internal commerce</option>
+                                
+                                    <option value="1247/2002 EEA relevance">1247/2002 EEA relevance</option>
+                                
+                                    <option value="OP">OP</option>
+                                
+                                    <option value="15693/1/23 18 REV">15693/1/23 18 REV</option>
+                                
+                                    <option value="2 matter Scope">2 matter Scope</option>
+                                
+                                    <option value="European  statistics">European  statistics</option>
+                                
+                                    <option value="online intermediation services">online intermediation services</option>
+                                
+                                    <option value="digital European Directives">digital European Directives</option>
+                                
+                                    <option value="55.3 trailer Regulation">55.3 trailer Regulation</option>
+                                
+                                    <option value="mutual 23 taxes">mutual 23 taxes</option>
+                                
+                                    <option value="77/799 Council EEC">77/799 Council EEC</option>
+                                
+                                    <option value="statistical EC domains">statistical EC domains</option>
+                                
+                                    <option value="territorial  statistics">territorial  statistics</option>
+                                
+                                    <option value="4 Registration procedures">4 Registration procedures</option>
+                                
+                                    <option value="7  design">7  design</option>
+                                
+                                    <option value="CHAPTER III Data">CHAPTER III Data</option>
+                                
+                                    <option value="term rental activity data">term rental activity data</option>
+                                
+                                    <option value="10 Digital Entry Points">10 Digital Entry Points</option>
+                                
+                                    <option value="12(2 term Article">12(2 term Article</option>
+                                
+                                    <option value="11 Digital Entry Points">11 Digital Entry Points</option>
+                                
+                                    <option value="Points coordination group">Points coordination group</option>
+                                
+                                    <option value="12  data">12  data</option>
+                                
+                                    <option value="European European Regulation">European European Regulation</option>
+                                
+                                    <option value="European Council">European Council</option>
+                                
+                                    <option value="statistical European Communities">statistical European Communities</option>
+                                
+                                    <option value="89/382 European Communities">89/382 European Communities</option>
+                                
+                                    <option value="penalties">penalties</option>
+                                
+                                    <option value="182/2011">182/2011</option>
+                                
+                                    <option value="17  Regulation">17  Regulation</option>
+                                
+                                    <option value="short accommodation rental Regulation">short accommodation rental Regulation</option>
+                                
+                                    <option value="18  1">18  1</option>
+                                
+                                    <option value="2022  Commission">2022  Commission</option>
+                                
+                                    <option value="short accommodation rental impact">short accommodation rental impact</option>
+                                
+                                    <option value="proposal">proposal</option>
+                                
+                                    <option value="short accommodation rental EU">short accommodation rental EU</option>
+                                
+                                    <option value="where Working Presidency">where Working Presidency</option>
+                                
+                                    <option value="specific data sharing">specific data sharing</option>
+                                
+                                    <option value="cost Data Protection parties">cost Data Protection parties</option>
+                                
+                                    <option value="administrative Member that">administrative Member that</option>
+                                
+                                    <option value="internal  market">internal  market</option>
+                                
+                                    <option value="proper rental services functioning">proper rental services functioning</option>
+                                
+                                    <option value="Opinion">Opinion</option>
+                                
+                                    <option value="22 Social February">22 Social February</option>
+                                
+                                    <option value="15.3.2023–16.3.20233">15.3.2023–16.3.20233</option>
+                                
+                                    <option value="16 Data Protection December">16 Data Protection December</option>
+                                
+                                    <option value="European Committee">European Committee</option>
+                                
+                                    <option value="Greens Kim van proposal">Greens Kim van proposal</option>
+                                
+                                    <option value="IMCO Committee">IMCO Committee</option>
+                                
+                                    <option value="interinstitutional  negotiations">interinstitutional  negotiations</option>
+                                
+                                    <option value="European Parliament">European Parliament</option>
+                                
+                                    <option value="plenary  session">plenary  session</option>
+                                
+                                    <option value="overall  compromise">overall  compromise</option>
+                                
+                                    <option value="European act">European act</option>
+                                
+                                    <option value="Working Party">Working Party</option>
+                                
+                                    <option value="11 Czech November">11 Czech November</option>
+                                
+                                    <option value="work">work</option>
+                                
+                                    <option value="Working Party 9">Working Party 9</option>
+                                
+                                    <option value="Competitiveness Council">Competitiveness Council</option>
+                                
+                                    <option value="thus European Parliament">thus European Parliament</option>
+                                
+                                    <option value="first trilogue meeting">first trilogue meeting</option>
+                                
+                                    <option value="11 Spanish October">11 Spanish October</option>
+                                
+                                    <option value="institutions">institutions</option>
+                                
+                                    <option value="short term sector">short term sector</option>
+                                
+                                    <option value="legislators">legislators</option>
+                                
+                                    <option value="technical  compromise">technical  compromise</option>
+                                
+                                    <option value="15 trilogue November">15 trilogue November</option>
+                                
+                                    <option value="Presidency">Presidency</option>
+                                
+                                    <option value="23 Working November">23 Working November</option>
+                                
+                                    <option value="main  elements">main  elements</option>
+                                
+                                    <option value="Section III">Section III</option>
+                                
+                                    <option value="GLOBAL">GLOBAL</option>
+                                
+                                    <option value="a">a</option>
+                                
+                                    <option value="3  it">3  it</option>
+                                
+                                    <option value="rental  platforms">rental  platforms</option>
+                                
+                                    <option value="competent  Regulation">competent  Regulation</option>
+                                
+                                    <option value="where  it">where  it</option>
+                                
+                                    <option value="active  hosts">active  hosts</option>
+                                
+                                    <option value="Consequently  threshold">Consequently  threshold</option>
+                                
+                                    <option value="active 2 listings">active 2 listings</option>
+                                
+                                    <option value="digital registration format">digital registration format</option>
+                                
+                                    <option value="5  Information">5  Information</option>
+                                
+                                    <option value="4 registration procedures">4 registration procedures</option>
+                                
+                                    <option value="reasonable  cost">reasonable  cost</option>
+                                
+                                    <option value="specific registration procedures">specific registration procedures</option>
+                                
+                                    <option value="national appeal level">national appeal level</option>
+                                
+                                    <option value="confidential registration period">confidential registration period</option>
+                                
+                                    <option value="18  months">18  months</option>
+                                
+                                    <option value="registration it">registration it</option>
+                                
+                                    <option value="national registration law">national registration law</option>
+                                
+                                    <option value="undue term rental delay">undue term rental delay</option>
+                                
+                                    <option value="invalid registration number">invalid registration number</option>
+                                
+                                    <option value="undue term delay">undue term delay</option>
+                                
+                                    <option value="registration host">registration host</option>
+                                
+                                    <option value="registration number">registration number</option>
+                                
+                                    <option value="6(4 data Regulation">6(4 data Regulation</option>
+                                
+                                    <option value="term rental term Article">term rental term Article</option>
+                                
+                                    <option value="extra  step">extra  step</option>
+                                
+                                    <option value="competent registration numbers">competent registration numbers</option>
+                                
+                                    <option value="invalid  it">invalid  it</option>
+                                
+                                    <option value="personal  data">personal  data</option>
+                                
+                                    <option value="updated registration information">updated registration information</option>
+                                
+                                    <option value="respective registration unit">respective registration unit</option>
+                                
+                                    <option value="cases">cases</option>
+                                
+                                    <option value="pursuant  Article">pursuant  Article</option>
+                                
+                                    <option value="competent  authority">competent  authority</option>
+                                
+                                    <option value="order">order</option>
+                                
+                                    <option value="suspension">suspension</option>
+                                
+                                    <option value="where registration procedure">where registration procedure</option>
+                                
+                                    <option value="area">area</option>
+                                
+                                    <option value="short accommodation rental host">short accommodation rental host</option>
+                                
+                                    <option value="also  assessments">also  assessments</option>
+                                
+                                    <option value="general monitoring obligation">general monitoring obligation</option>
+                                
+                                    <option value="application">application</option>
+                                
+                                    <option value="Digital Services assessments">Digital Services assessments</option>
+                                
+                                    <option value="automated Digital Entry way">automated Digital Entry way</option>
+                                
+                                    <option value="seamless Digital Entry Commission">seamless Digital Entry Commission</option>
+                                
+                                    <option value="implementing examination procedure">implementing examination procedure</option>
+                                
+                                    <option value="Moreover  interoperability">Moreover  interoperability</option>
+                                
+                                    <option value="technical Application Programming Commission">technical Application Programming Commission</option>
+                                
+                                    <option value="technical  interface">technical  interface</option>
+                                
+                                    <option value="However  it">However  it</option>
+                                
+                                    <option value="procedural Commission groups">procedural Commission groups</option>
+                                
+                                    <option value="Commission evaluation">Commission evaluation</option>
+                                
+                                    <option value="centralised Digital Entry Point">centralised Digital Entry Point</option>
+                                
+                                    <option value="criminal Member offences">criminal Member offences</option>
+                                
+                                    <option value="national term law">national term law</option>
+                                
+                                    <option value="powers">powers</option>
+                                
+                                    <option value="information requirements">information requirements</option>
+                                
+                                    <option value="term rental term platforms">term rental term platforms</option>
+                                
+                                    <option value="particular European Council20">particular European Council20</option>
+                                
+                                    <option value="committee">committee</option>
+                                
+                                    <option value="directly Member States">directly Member States</option>
+                                
+                                    <option value="designated  authorities">designated  authorities</option>
+                                
+                                    <option value="years Member Commission">years Member Commission</option>
+                                
+                                    <option value="years  Commission">years  Commission</option>
+                                
+                                    <option value="main  findings">main  findings</option>
+                                
+                                    <option value="which">which</option>
+                                
+                                    <option value="Economic European Regions">Economic European Regions</option>
+                                
+                                    <option value="Finally  Regulation">Finally  Regulation</option>
+                                
+                                    <option value="months  force">months  force</option>
+                                
+                                    <option value="new Digital Entry application">new Digital Entry application</option>
+                                
+                                    <option value="2022/0358  Proposal">2022/0358  Proposal</option>
+                                
+                                    <option value="p.">p.</option>
+                                
+                                    <option value="national Data Protection Supervisor7">national Data Protection Supervisor7</option>
+                                
+                                    <option value="REV">REV</option>
+                                
+                                    <option value="7 sk EN">7 sk EN</option>
+                                
+                                    <option value="8 COMPET.1 EN">8 COMPET.1 EN</option>
+                                
+                                    <option value="9 sk EN">9 sk EN</option>
+                                
+                                    <option value="10 sk EN">10 sk EN</option>
+                                
+                                    <option value="11 sk EN">11 sk EN</option>
+                                
+                                    <option value="12 sk EN">12 sk EN</option>
+                                
+                                    <option value="13 sk EN">13 sk EN</option>
+                                
+                                    <option value="14 sk EN">14 sk EN</option>
+                                
+                                    <option value="15 sk EN">15 sk EN</option>
+                                
+                                    <option value="16 sk EN">16 sk EN</option>
+                                
+                                    <option value="17 sk EN">17 sk EN</option>
+                                
+                                    <option value="18 sk EN">18 sk EN</option>
+                                
+                                    <option value="19 sk EN">19 sk EN</option>
+                                
+                                    <option value="20 sk EN">20 sk EN</option>
+                                
+                                    <option value="21 sk EN">21 sk EN</option>
+                                
+                                    <option value="22 sk EN">22 sk EN</option>
+                                
+                                    <option value="23 sk EN">23 sk EN</option>
+                                
+                                    <option value="24 sk EN">24 sk EN</option>
+                                
+                                    <option value="25 sk EN">25 sk EN</option>
+                                
+                                    <option value="26 sk EN">26 sk EN</option>
+                                
+                                    <option value="27 sk EN">27 sk EN</option>
+                                
+                                    <option value="28 sk EN">28 sk EN</option>
+                                
+                                    <option value="29 sk EN">29 sk EN</option>
+                                
+                                    <option value="30 sk EN">30 sk EN</option>
+                                
+                                    <option value="33 sk EN">33 sk EN</option>
+                                
+                                    <option value="34 sk EN">34 sk EN</option>
+                                
+                                    <option value="36 sk EN">36 sk EN</option>
+                                
+                                    <option value="37 sk EN">37 sk EN</option>
+                                
+                                    <option value="39 sk EN">39 sk EN</option>
+                                
+                                    <option value="40 sk EN">40 sk EN</option>
+                                
+                                    <option value="41 sk EN">41 sk EN</option>
+                                
+                                    <option value="42 sk EN">42 sk EN</option>
+                                
+                                    <option value="44 sk EN">44 sk EN</option>
+                                
+                                    <option value="45 sk EN">45 sk EN</option>
+                                
+                                    <option value="46 sk EN">46 sk EN</option>
+                                
+                                    <option value="47 sk EN">47 sk EN</option>
+                                
+                                    <option value="48 sk EN">48 sk EN</option>
+                                
+                                    <option value="49 sk EN">49 sk EN</option>
+                                
+                                    <option value="50 sk EN">50 sk EN</option>
+                                
+                                    <option value="51 sk EN">51 sk EN</option>
+                                
+                                    <option value="52 sk EN">52 sk EN</option>
+                                
+                                    <option value="53 sk EN">53 sk EN</option>
+                                
+                                    <option value="54 sk EN">54 sk EN</option>
+                                
+                                    <option value="Short accommodation rental services">Short accommodation rental services</option>
+                                
+                                    <option value="such accommodation hotels">such accommodation hotels</option>
+                                
+                                    <option value="volume">volume</option>
+                                
+                                    <option value="significantly platform economy">significantly platform economy</option>
+                                
+                                    <option value="rapid tourism growth">rapid tourism growth</option>
+                                
+                                    <option value="long term rents">long term rents</option>
+                                
+                                    <option value="authorities">authorities</option>
+                                
+                                    <option value="appropriate policy responses">appropriate policy responses</option>
+                                
+                                    <option value="Public  authorities">Public  authorities</option>
+                                
+                                    <option value="rental term platforms">rental term platforms</option>
+                                
+                                    <option value="legal  obligations">legal  obligations</option>
+                                
+                                    <option value="related Member procedures">related Member procedures</option>
+                                
+                                    <option value="large  majority">large  majority</option>
+                                
+                                    <option value="internal accommodation rental market">internal accommodation rental market</option>
+                                
+                                    <option value="balanced tourism that">balanced tourism that</option>
+                                
+                                    <option value="targeted Union level">targeted Union level</option>
+                                
+                                    <option value="short accommodation rental which">short accommodation rental which</option>
+                                
+                                    <option value="effective  manner">effective  manner</option>
+                                
+                                    <option value="where Member States">where Member States</option>
+                                
+                                    <option value="such transparency requirements">such transparency requirements</option>
+                                
+                                    <option value="rental Member States">rental Member States</option>
+                                
+                                    <option value="such  schemes">such  schemes</option>
+                                
+                                    <option value="uniform Member States">uniform Member States</option>
+                                
+                                    <option value="present term Regulation">present term Regulation</option>
+                                
+                                    <option value="Member States">Member States</option>
+                                
+                                    <option value="internal data market">internal data market</option>
+                                
+                                    <option value="possible market access data">possible market access data</option>
+                                
+                                    <option value="relevant registration number">relevant registration number</option>
+                                
+                                    <option value="health consumer requirements">health consumer requirements</option>
+                                
+                                    <option value="available registration them">available registration them</option>
+                                
+                                    <option value="responsible  data">responsible  data</option>
+                                
+                                    <option value="short accommodation rental territory">short accommodation rental territory</option>
+                                
+                                    <option value="clear  authorisation">clear  authorisation</option>
+                                
+                                    <option value="where term Articles">where term Articles</option>
+                                
+                                    <option value="thereof  delay">thereof  delay</option>
+                                
+                                    <option value="such quality requirements">such quality requirements</option>
+                                
+                                    <option value="European European Council8">European European Council8</option>
+                                
+                                    <option value="public housing that">public housing that</option>
+                                
+                                    <option value="objective">objective</option>
+                                
+                                    <option value="uniform Member that">uniform Member that</option>
+                                
+                                    <option value="Union law">Union law</option>
+                                
+                                    <option value="such authorisation requirement">such authorisation requirement</option>
+                                
+                                    <option value="traders">traders</option>
+                                
+                                    <option value="requirement">requirement</option>
+                                
+                                    <option value="Accordingly  it">Accordingly  it</option>
+                                
+                                    <option value="such Member areas">such Member areas</option>
+                                
+                                    <option value="future  use">future  use</option>
+                                
+                                    <option value="national customs law">national customs law</option>
+                                
+                                    <option value="short accommodation rental services">short accommodation rental services</option>
+                                
+                                    <option value="a term year">a term year</option>
+                                
+                                    <option value="such trailer accommodations">such trailer accommodations</option>
+                                
+                                    <option value="guests">guests</option>
+                                
+                                    <option value="9 Registration procedures">9 Registration procedures</option>
+                                
+                                    <option value="Such  data">Such  data</option>
+                                
+                                    <option value="term rental term that">term rental term that</option>
+                                
+                                    <option value="rental activity data">rental activity data</option>
+                                
+                                    <option value="provision">provision</option>
+                                
+                                    <option value="short term basis">short term basis</option>
+                                
+                                    <option value="short  term">short  term</option>
+                                
+                                    <option value="such  business">such  business</option>
+                                
+                                    <option value="similar apartment data">similar apartment data</option>
+                                
+                                    <option value="accommodation">accommodation</option>
+                                
+                                    <option value="electronic  which">electronic  which</option>
+                                
+                                    <option value="direct  Regulation">direct  Regulation</option>
+                                
+                                    <option value="they">they</option>
+                                
+                                    <option value="economic  compensation">economic  compensation</option>
+                                
+                                    <option value="competent  Article">competent  Article</option>
+                                
+                                    <option value="such  data">such  data</option>
+                                
+                                    <option value="unique  data">unique  data</option>
+                                
+                                    <option value="properly  hosts">properly  hosts</option>
+                                
+                                    <option value="competent Member which">competent Member which</option>
+                                
+                                    <option value="term rental registration hosts">term rental registration hosts</option>
+                                
+                                    <option value="one registration unit">one registration unit</option>
+                                
+                                    <option value="regional Member level">regional Member level</option>
+                                
+                                    <option value="Misuse">Misuse</option>
+                                
+                                    <option value="Registration obligations">Registration obligations</option>
+                                
+                                    <option value="national population statistics">national population statistics</option>
+                                
+                                    <option value="common Member that">common Member that</option>
+                                
+                                    <option value="precise  unit">precise  unit</option>
+                                
+                                    <option value="Hosts">Hosts</option>
+                                
+                                    <option value="pursuant identity Regulation">pursuant identity Regulation</option>
+                                
+                                    <option value="reasonable  time">reasonable  time</option>
+                                
+                                    <option value="reasonable  which">reasonable  which</option>
+                                
+                                    <option value="administrative  question">administrative  question</option>
+                                
+                                    <option value="also  hosts">also  hosts</option>
+                                
+                                    <option value="required  documentation">required  documentation</option>
+                                
+                                    <option value="offline  service">offline  service</option>
+                                
+                                    <option value="skilled  users">skilled  users</option>
+                                
+                                    <option value="competent accommodation rental authorities">competent accommodation rental authorities</option>
+                                
+                                    <option value="national contact unit">national contact unit</option>
+                                
+                                    <option value="apartment  unit">apartment  unit</option>
+                                
+                                    <option value="apartment  that">apartment  that</option>
+                                
+                                    <option value="far authorisation scheme">far authorisation scheme</option>
+                                
+                                    <option value="Directive 2006/123 Directive EC">Directive 2006/123 Directive EC</option>
+                                
+                                    <option value="market access that">market access that</option>
+                                
+                                    <option value="short term rental services">short term rental services</option>
+                                
+                                    <option value="automatic  issuance">automatic  issuance</option>
+                                
+                                    <option value="competent Union law">competent Union law</option>
+                                
+                                    <option value="host">host</option>
+                                
+                                    <option value="other  purposes">other  purposes</option>
+                                
+                                    <option value="different  platforms">different  platforms</option>
+                                
+                                    <option value="other accommodation rental that">other accommodation rental that</option>
+                                
+                                    <option value="maximum bed unit">maximum bed unit</option>
+                                
+                                    <option value="maximum bed places">maximum bed places</option>
+                                
+                                    <option value="equal  which">equal  which</option>
+                                
+                                    <option value="national accessibility requirements">national accessibility requirements</option>
+                                
+                                    <option value="additional  services">additional  services</option>
+                                
+                                    <option value="remuneration">remuneration</option>
+                                
+                                    <option value="discrimination  they">discrimination  they</option>
+                                
+                                    <option value="regulatory European Union">regulatory European Union</option>
+                                
+                                    <option value="2006/123 authorisation EC">2006/123 authorisation EC</option>
+                                
+                                    <option value="where hosting arrangements">where hosting arrangements</option>
+                                
+                                    <option value="temporary  protection">temporary  protection</option>
+                                
+                                    <option value="other safety hosts">other safety hosts</option>
+                                
+                                    <option value="information">information</option>
+                                
+                                    <option value="only registration number">only registration number</option>
+                                
+                                    <option value="original reference booking">original reference booking</option>
+                                
+                                    <option value="subsequent  registrations">subsequent  registrations</option>
+                                
+                                    <option value="supporting  documentation">supporting  documentation</option>
+                                
+                                    <option value="short- accommodation rental services">short- accommodation rental services</option>
+                                
+                                    <option value="even  information">even  information</option>
+                                
+                                    <option value="2016/679 data protection EU">2016/679 data protection EU</option>
+                                
+                                    <option value="competent  which">competent  which</option>
+                                
+                                    <option value="registration Regulation">registration Regulation</option>
+                                
+                                    <option value="pursuant redress paragraphs">pursuant redress paragraphs</option>
+                                
+                                    <option value="where registration it">where registration it</option>
+                                
+                                    <option value="manifest  host">manifest  host</option>
+                                
+                                    <option value="orders">orders</option>
+                                
+                                    <option value="individual Uniform Resource listings">individual Uniform Resource listings</option>
+                                
+                                    <option value="national  law">national  law</option>
+                                
+                                    <option value="corresponding accommodation rental fraud">corresponding accommodation rental fraud</option>
+                                
+                                    <option value="additional Digital Entry Point">additional Digital Entry Point</option>
+                                
+                                    <option value="incorrect registration number">incorrect registration number</option>
+                                
+                                    <option value="online diligence consumers">online diligence consumers</option>
+                                
+                                    <option value="distance traders">distance traders</option>
+                                
+                                    <option value="short accommodation rental that">short accommodation rental that</option>
+                                
+                                    <option value="peer accommodation rental who">peer accommodation rental who</option>
+                                
+                                    <option value="necessarily Union law">necessarily Union law</option>
+                                
+                                    <option value="national  it">national  it</option>
+                                
+                                    <option value="short rental services">short rental services</option>
+                                
+                                    <option value="specifically accommodation rental data">specifically accommodation rental data</option>
+                                
+                                    <option value="assessment">assessment</option>
+                                
+                                    <option value="automated  tools">automated  tools</option>
+                                
+                                    <option value="Member which">Member which</option>
+                                
+                                    <option value="regular activity basis">regular activity basis</option>
+                                
+                                    <option value="such  unit">such  unit</option>
+                                
+                                    <option value="night">night</option>
+                                
+                                    <option value="rental  platform">rental  platform</option>
+                                
+                                    <option value="possession">possession</option>
+                                
+                                    <option value="so  they">so  they</option>
+                                
+                                    <option value="that">that</option>
+                                
+                                    <option value="otherwise Union law">otherwise Union law</option>
+                                
+                                    <option value="Commission">Commission</option>
+                                
+                                    <option value="same  hosts">same  hosts</option>
+                                
+                                    <option value="applicable  rules">applicable  rules</option>
+                                
+                                    <option value="additional  information">additional  information</option>
+                                
+                                    <option value="applicable registration hosts">applicable registration hosts</option>
+                                
+                                    <option value="machine data they">machine data they</option>
+                                
+                                    <option value="4250  Union">4250  Union</option>
+                                
+                                    <option value="competent compliance authorities">competent compliance authorities</option>
+                                
+                                    <option value="relevant  data">relevant  data</option>
+                                
+                                    <option value="already place that">already place that</option>
+                                
+                                    <option value="machine transmission requirements">machine transmission requirements</option>
+                                
+                                    <option value="Digital Entry Point">Digital Entry Point</option>
+                                
+                                    <option value="Member State">Member State</option>
+                                
+                                    <option value="relevant registration listings">relevant registration listings</option>
+                                
+                                    <option value="national  coordinator">national  coordinator</option>
+                                
+                                    <option value="national contact coordinator">national contact coordinator</option>
+                                
+                                    <option value="Collecting">Collecting</option>
+                                
+                                    <option value="also  that">also  that</option>
+                                
+                                    <option value="national Digital Entry Point">national Digital Entry Point</option>
+                                
+                                    <option value="timely data sharing processes">timely data sharing processes</option>
+                                
+                                    <option value="Digital Entry Points">Digital Entry Points</option>
+                                
+                                    <option value="self- compliance burden">self- compliance burden</option>
+                                
+                                    <option value="coordination group">coordination group</option>
+                                
+                                    <option value="automatically Application Programming Interface">automatically Application Programming Interface</option>
+                                
+                                    <option value="individual Member State">individual Member State</option>
+                                
+                                    <option value="where Member State">where Member State</option>
+                                
+                                    <option value="pursuant ex post Regulation">pursuant ex post Regulation</option>
+                                
+                                    <option value="long term they">long term they</option>
+                                
+                                    <option value="Digital Entry Regulation">Digital Entry Regulation</option>
+                                
+                                    <option value="national Digital Entry implementing">national Digital Entry implementing</option>
+                                
+                                    <option value="rental accommodation rental Union">rental accommodation rental Union</option>
+                                
+                                    <option value="standardised ▌ registration numbers">standardised ▌ registration numbers</option>
+                                
+                                    <option value="national  coordinators">national  coordinators</option>
+                                
+                                    <option value="where  Commission">where  Commission</option>
+                                
+                                    <option value="preparatory Point Coordination Group">preparatory Point Coordination Group</option>
+                                
+                                    <option value="25  Alignment">25  Alignment</option>
+                                
+                                    <option value="administrative data procedures">administrative data procedures</option>
+                                
+                                    <option value="entities">entities</option>
+                                
+                                    <option value="national Member States">national Member States</option>
+                                
+                                    <option value="general Member powers">general Member powers</option>
+                                
+                                    <option value="proportionate  framework">proportionate  framework</option>
+                                
+                                    <option value="Regulation European Council12">Regulation European Council12</option>
+                                
+                                    <option value="regional  that">regional  that</option>
+                                
+                                    <option value="activity territory">activity territory</option>
+                                
+                                    <option value="only  rules">only  rules</option>
+                                
+                                    <option value="free European Union">free European Union</option>
+                                
+                                    <option value="data rules">data rules</option>
+                                
+                                    <option value="Regulation accommodation rental 2016/679">Regulation accommodation rental 2016/679</option>
+                                
+                                    <option value="relevant  which">relevant  which</option>
+                                
+                                    <option value="Regulation data 2016/679">Regulation data 2016/679</option>
+                                
+                                    <option value="applicable activity data">applicable activity data</option>
+                                
+                                    <option value="2016/679 protection EU">2016/679 protection EU</option>
+                                
+                                    <option value="27 Activity data">27 Activity data</option>
+                                
+                                    <option value="official  statistics">official  statistics</option>
+                                
+                                    <option value="data">data</option>
+                                
+                                    <option value="European European tourism">European European tourism</option>
+                                
+                                    <option value="when registration this">when registration this</option>
+                                
+                                    <option value="new business models">new business models</option>
+                                
+                                    <option value="same activity data">same activity data</option>
+                                
+                                    <option value="sectorial data spaces">sectorial data spaces</option>
+                                
+                                    <option value="Those">Those</option>
+                                
+                                    <option value="term rental accommodation services">term rental accommodation services</option>
+                                
+                                    <option value="30 Member States">30 Member States</option>
+                                
+                                    <option value="effective  Regulation">effective  Regulation</option>
+                                
+                                    <option value="2022/2065  obligations">2022/2065  obligations</option>
+                                
+                                    <option value="Chapter IV Chapter 2022/2065">Chapter IV Chapter 2022/2065</option>
+                                
+                                    <option value="competent  Commission">competent  Commission</option>
+                                
+                                    <option value="Chapter Regulation">Chapter Regulation</option>
+                                
+                                    <option value="Consequently  Commission">Consequently  Commission</option>
+                                
+                                    <option value="online enforcement Regulation">online enforcement Regulation</option>
+                                
+                                    <option value="relevant Digital Entry unit">relevant Digital Entry unit</option>
+                                
+                                    <option value="them">them</option>
+                                
+                                    <option value="such  penalties">such  penalties</option>
+                                
+                                    <option value="2000/31 European Council14">2000/31 European Council14</option>
+                                
+                                    <option value="notably data sharing obligations">notably data sharing obligations</option>
+                                
+                                    <option value="European which">European which</option>
+                                
+                                    <option value="internal assistance market">internal assistance market</option>
+                                
+                                    <option value="Annex host">Annex host</option>
+                                
+                                    <option value="online  procedures">online  procedures</option>
+                                
+                                    <option value="one Member they">one Member they</option>
+                                
+                                    <option value="thereby compliance hosts">thereby compliance hosts</option>
+                                
+                                    <option value="functionality">functionality</option>
+                                
+                                    <option value="solving European Regulation">solving European Regulation</option>
+                                
+                                    <option value="Commission Implementing Regulation">Commission Implementing Regulation</option>
+                                
+                                    <option value="only Council C/2022/5628">only Council C/2022/5628</option>
+                                
+                                    <option value="broad  evaluation">broad  evaluation</option>
+                                
+                                    <option value="border Member cooperation">border Member cooperation</option>
+                                
+                                    <option value="better Union Union">better Union Union</option>
+                                
+                                    <option value="5 European Union">5 European Union</option>
+                                
+                                    <option value="what">what</option>
+                                
+                                    <option value="objectives">objectives</option>
+                                
+                                    <option value="fundamental  right">fundamental  right</option>
+                                
+                                    <option value="EU  2016/679">EU  2016/679</option>
+                                
+                                    <option value="personal data processing">personal data processing</option>
+                                
+                                    <option value="Regulation  2016/679">Regulation  2016/679</option>
+                                
+                                    <option value="supervisory data authorities">supervisory data authorities</option>
+                                
+                                    <option value="personal  Regulation">personal  Regulation</option>
+                                
+                                    <option value="Data Protection Supervisor">Data Protection Supervisor</option>
+                                
+                                    <option value="such Union Regulation">such Union Regulation</option>
+                                
+                                    <option value="months  Regulation">months  Regulation</option>
+                                
+                                    <option value="national building REV">national building REV</option>
+                                
+                                    <option value="32 sk EN">32 sk EN</option>
+                                
+                                    <option value="Directive">Directive</option>
+                                
+                                    <option value="technical Information Society services">technical Information Society services</option>
+                                
+                                    <option value="furnished  that">furnished  that</option>
+                                
+                                    <option value="short accommodation rental service">short accommodation rental service</option>
+                                
+                                    <option value="It">It</option>
+                                
+                                    <option value="short Annex Regulation">short Annex Regulation</option>
+                                
+                                    <option value="4(6 Directive REV">4(6 Directive REV</option>
+                                
+                                    <option value="35 sk EN">35 sk EN</option>
+                                
+                                    <option value="12">12</option>
+                                
+                                    <option value="4  Regulation">4  Regulation</option>
+                                
+                                    <option value="registration procedure">registration procedure</option>
+                                
+                                    <option value="national Member Chapter">national Member Chapter</option>
+                                
+                                    <option value="such data transmission requirement">such data transmission requirement</option>
+                                
+                                    <option value="competent registration territory">competent registration territory</option>
+                                
+                                    <option value="short term rental unit">short term rental unit</option>
+                                
+                                    <option value="so registration number">so registration number</option>
+                                
+                                    <option value="registration numbers">registration numbers</option>
+                                
+                                    <option value="easily  registry">easily  registry</option>
+                                
+                                    <option value="such  REV">such  REV</option>
+                                
+                                    <option value="38 sk EN">38 sk EN</option>
+                                
+                                    <option value="registered business registration that">registered business registration that</option>
+                                
+                                    <option value="legal contact telephone persons">legal contact telephone persons</option>
+                                
+                                    <option value="competent mail authority">competent mail authority</option>
+                                
+                                    <option value="2">2</option>
+                                
+                                    <option value="2(2)(a  submission">2(2)(a  submission</option>
+                                
+                                    <option value="registration Article">registration Article</option>
+                                
+                                    <option value="Where Member States">Where Member States</option>
+                                
+                                    <option value="term rental term services">term rental term services</option>
+                                
+                                    <option value="Member this">Member this</option>
+                                
+                                    <option value="4(2  point">4(2  point</option>
+                                
+                                    <option value="4(2  unit">4(2  unit</option>
+                                
+                                    <option value="registry">registry</option>
+                                
+                                    <option value="competent  they">competent  they</option>
+                                
+                                    <option value="7  Regulation">7  Regulation</option>
+                                
+                                    <option value="5(2  it">5(2  it</option>
+                                
+                                    <option value="undue registration delay">undue registration delay</option>
+                                
+                                    <option value="pursuant registration it">pursuant registration it</option>
+                                
+                                    <option value="intention">intention</option>
+                                
+                                    <option value="it">it</option>
+                                
+                                    <option value="paragraphs">paragraphs</option>
+                                
+                                    <option value="2(2)(a  it">2(2)(a  it</option>
+                                
+                                    <option value="such  information">such  information</option>
+                                
+                                    <option value="clearly registration REV">clearly registration REV</option>
+                                
+                                    <option value="43 sk EN">43 sk EN</option>
+                                
+                                    <option value="given registration lists">given registration lists</option>
+                                
+                                    <option value="13 Member Article">13 Member Article</option>
+                                
+                                    <option value="solely  assessment">solely  assessment</option>
+                                
+                                    <option value="automated  Article">automated  Article</option>
+                                
+                                    <option value="where Member unit">where Member unit</option>
+                                
+                                    <option value="specific registration listing">specific registration listing</option>
+                                
+                                    <option value="national Member State">national Member State</option>
+                                
+                                    <option value="transmission">transmission</option>
+                                
+                                    <option value="machine communication means">machine communication means</option>
+                                
+                                    <option value="4(1 Member State">4(1 Member State</option>
+                                
+                                    <option value="pursuant term Article">pursuant term Article</option>
+                                
+                                    <option value="same  information">same  information</option>
+                                
+                                    <option value="rental registration Article">rental registration Article</option>
+                                
+                                    <option value="strictly  purpose">strictly  purpose</option>
+                                
+                                    <option value="rental registration platforms">rental registration platforms</option>
+                                
+                                    <option value="implementing  acts">implementing  acts</option>
+                                
+                                    <option value="examination Article">examination Article</option>
+                                
+                                    <option value="respective Digital Entry Point">respective Digital Entry Point</option>
+                                
+                                    <option value="national Member Commission">national Member Commission</option>
+                                
+                                    <option value="procedure">procedure</option>
+                                
+                                    <option value="harmonised data sharing">harmonised data sharing</option>
+                                
+                                    <option value="particular coordination group">particular coordination group</option>
+                                
+                                    <option value="common registration numbers">common registration numbers</option>
+                                
+                                    <option value="intended  purpose">intended  purpose</option>
+                                
+                                    <option value="short Union law">short Union law</option>
+                                
+                                    <option value="Competent  authorities">Competent  authorities</option>
+                                
+                                    <option value="months activity receipt">months activity receipt</option>
+                                
+                                    <option value="respective  territories">respective  territories</option>
+                                
+                                    <option value="where business this">where business this</option>
+                                
+                                    <option value="activities">activities</option>
+                                
+                                    <option value="available bed unit">available bed unit</option>
+                                
+                                    <option value="statistical European Council25">statistical European Council25</option>
+                                
+                                    <option value="Access">Access</option>
+                                
+                                    <option value="appropriate data protection">appropriate data protection</option>
+                                
+                                    <option value="public  lists">public  lists</option>
+                                
+                                    <option value="paragraph">paragraph</option>
+                                
+                                    <option value="Chapter references">Chapter references</option>
+                                
+                                    <option value="7(1  Regulation">7(1  Regulation</option>
+                                
+                                    <option value="IV  they">IV  they</option>
+                                
+                                    <option value="also Articles Regulation">also Articles Regulation</option>
+                                
+                                    <option value="Authorities">Authorities</option>
+                                
+                                    <option value="7(3 Digital Entry Regulation">7(3 Digital Entry Regulation</option>
+                                
+                                    <option value="Where  reference">Where  reference</option>
+                                
+                                    <option value="5  Regulation">5  Regulation</option>
+                                
+                                    <option value="following  point">following  point</option>
+                                
+                                    <option value="13 European Council">13 European Council</option>
+                                
+                                    <option value="third accommodation rental following">third accommodation rental following</option>
+                                
+                                    <option value="new registration number">new registration number</option>
+                                
+                                    <option value="report">report</option>
+                                
+                                    <option value="relevant Member Article">relevant Member Article</option>
+                                
+                                    <option value="rental accommodation rental REV">rental accommodation rental REV</option>
+                                
+                                    <option value="55 sk EN">55 sk EN</option>
+                                
+                                    <option value="19  Regulation">19  Regulation</option>
+                                
+                                    <option value="twentieth European Union">twentieth European Union</option>
+                                
+                                    <option value="15693/1/23 COMPET.1 REV">15693/1/23 COMPET.1 REV</option>
+                                
+                                    <option value="56 sk EN">56 sk EN</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+              <div id="filter-menu" class="card-header">
+                <div class="row no-gutters">
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'item')"
+                            id="select-item"
+                        >
+                        <option value="">Select a network item</option>
+                        <option value="edge">edge</option>
+                        <option value="node">node</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="updateFilter(value, 'property')"
+                            id="select-property"
+                        >
+                        <option value="">Select a property...</option>
+                    </select>
+                  </div>
+                  <div class="col-3 pb-2">
+                    <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            id="select-value"
+                        >
+                        <option value="">Select value(s)...</option>
+                    </select>
+                  </div>
+                  <div class="col-1 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="highlightFilter(filter);">Filter</button>
+                  </div>
+                  <div class="col-2 pb-2">
+                    <button type="button" class="btn btn-primary btn-block" onclick="clearFilter(true)">Reset Selection</button>
+                  </div>
+                </div>
+              </div>
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+                  // explicitly using onItemAdd and this function as we need to save multiple values
+                  let updateValueFilter = function() {
+                      return function () {
+                      filter['value'].push(arguments[0])
+                      }
+                  }
+
+                  let valueControl = new TomSelect("#select-value",{
+                      maxItems: null,
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: updateValueFilter()
+                  });
+
+                  let addValues = function() {
+                      return function () {
+                          // clear the current value options and add the selected attribute values
+                          // tom-select handles duplicates
+                          let selectedProperty = arguments[0];
+                          valueControl.clear();
+                          valueControl.clearOptions();
+                          filter['value'] = []
+                          if (filter['item'] === 'node') {
+                              for (let each in allNodes) {
+                                  valueControl.addOption({
+                                      id:allNodes[each][selectedProperty],
+                                      title:allNodes[each][selectedProperty]
+                                  })
+                              }
+                          }
+                          else if (filter['item'] === 'edge') {
+                              for (let each in allEdges) {
+                                  valueControl.addOption({
+                                      id:allEdges[each][selectedProperty],
+                                      title:allEdges[each][selectedProperty]
+                                  })
+                              }
+                          }
+                      }
+                  };
+
+                  let propControl = new TomSelect("#select-property",{
+                      valueField: 'id',
+                      labelField: 'title',
+                      searchField: 'title',
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addValues()
+                  });
+
+                  let addProperties = function() {
+                      return function () {
+                          // loops through the selected network item and adds the attributes to dropdown
+                          // tom-select handles duplicates
+                          clearFilter(false)
+                          if (arguments[0] === 'edge') {
+                              for (let each in allEdges) {
+                                  if (allEdges.hasOwnProperty(each)) {
+                                      for (let eachProp in allEdges[each]) {
+                                          if (allEdges[each].hasOwnProperty(eachProp)) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                          else if (arguments[0] === 'node') {
+                              for (let each in allNodes) {
+                                  if (allNodes.hasOwnProperty(each)) {
+                                      for (let eachProp in allNodes[each]) {
+                                          if (allNodes[each].hasOwnProperty(eachProp)
+                                              && (eachProp !== 'hidden' && eachProp !== 'savedLabel'
+                                                  && eachProp !== 'hiddenLabel')) {
+                                              propControl.addOption({id: eachProp, title: eachProp})
+
+                                          }
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  };
+
+                  let itemControl = new TomSelect("#select-item",{
+                      create: false,
+                      sortField:{
+                          field: "text",
+                          direction: "asc"
+                      },
+                      onItemAdd: addProperties()
+                  });
+
+                  function clearFilter(reset) {
+                      // utility function to clear all the selected filter options
+                      // if reset is set to true, the existing filter will be removed
+                      // else, only the dropdown options are cleared
+                      propControl.clear();
+                      propControl.clearOptions();
+                      valueControl.clear();
+                      valueControl.clearOptions();
+                      filter = {
+                          item : '',
+                          property : '',
+                          value : []
+                      }
+                      if (reset) {
+                          itemControl.clear();
+                          filterHighlight({nodes: []})
+                      }
+                  }
+
+                  function updateFilter(value, key) {
+                      // key could be 'item' or 'property' and value is as selected in dropdown
+                      filter[key] = value
+                  }
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "", "label": "", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1 European Union Brussels", "label": "1 European Union Brussels", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15693/1/23", "label": "15693/1/23", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Interinstitutional  File", "label": "Interinstitutional  File", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "General Council", "label": "General Council", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "final compromise agreement", "label": "final compromise agreement", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "COUNCIL", "label": "COUNCIL", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "hosts", "label": "hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  authorities", "label": "competent  authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "design", "label": "design", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regulation", "label": "Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "EEA relevance", "label": "EEA relevance", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "EUROPEAN UNION", "label": "EUROPEAN UNION", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "internal European market", "label": "internal European market", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2000/31 Digital EC", "label": "2000/31 Digital EC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration procedures", "label": "registration procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "sized Commission enterprises", "label": "sized Commission enterprises", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European Council11", "label": "European Council11", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "95/46 European EC", "label": "95/46 European EC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European Council Directive", "label": "European Council Directive", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Such  penalties", "label": "Such  penalties", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "electronic Internal commerce", "label": "electronic Internal commerce", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1247/2002 EEA relevance", "label": "1247/2002 EEA relevance", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "OP", "label": "OP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15693/1/23 18 REV", "label": "15693/1/23 18 REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2 matter Scope", "label": "2 matter Scope", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European  statistics", "label": "European  statistics", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "online intermediation services", "label": "online intermediation services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "digital European Directives", "label": "digital European Directives", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "55.3 trailer Regulation", "label": "55.3 trailer Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "mutual 23 taxes", "label": "mutual 23 taxes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "77/799 Council EEC", "label": "77/799 Council EEC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "statistical EC domains", "label": "statistical EC domains", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "territorial  statistics", "label": "territorial  statistics", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4 Registration procedures", "label": "4 Registration procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7  design", "label": "7  design", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "CHAPTER III Data", "label": "CHAPTER III Data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental activity data", "label": "term rental activity data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "10 Digital Entry Points", "label": "10 Digital Entry Points", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "12(2 term Article", "label": "12(2 term Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "11 Digital Entry Points", "label": "11 Digital Entry Points", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Points coordination group", "label": "Points coordination group", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "12  data", "label": "12  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European European Regulation", "label": "European European Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European Council", "label": "European Council", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "statistical European Communities", "label": "statistical European Communities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "89/382 European Communities", "label": "89/382 European Communities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "penalties", "label": "penalties", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "182/2011", "label": "182/2011", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "17  Regulation", "label": "17  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental Regulation", "label": "short accommodation rental Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "18  1", "label": "18  1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2022  Commission", "label": "2022  Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental impact", "label": "short accommodation rental impact", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "proposal", "label": "proposal", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental EU", "label": "short accommodation rental EU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where Working Presidency", "label": "where Working Presidency", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "specific data sharing", "label": "specific data sharing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cost Data Protection parties", "label": "cost Data Protection parties", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "administrative Member that", "label": "administrative Member that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "internal  market", "label": "internal  market", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "proper rental services functioning", "label": "proper rental services functioning", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Opinion", "label": "Opinion", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "22 Social February", "label": "22 Social February", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15.3.2023\u201316.3.20233", "label": "15.3.2023\u201316.3.20233", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "16 Data Protection December", "label": "16 Data Protection December", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European Committee", "label": "European Committee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Greens Kim van proposal", "label": "Greens Kim van proposal", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "IMCO Committee", "label": "IMCO Committee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "interinstitutional  negotiations", "label": "interinstitutional  negotiations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European Parliament", "label": "European Parliament", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "plenary  session", "label": "plenary  session", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "overall  compromise", "label": "overall  compromise", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European act", "label": "European act", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Working Party", "label": "Working Party", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "11 Czech November", "label": "11 Czech November", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "work", "label": "work", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Working Party 9", "label": "Working Party 9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Competitiveness Council", "label": "Competitiveness Council", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "thus European Parliament", "label": "thus European Parliament", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "first trilogue meeting", "label": "first trilogue meeting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "11 Spanish October", "label": "11 Spanish October", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "institutions", "label": "institutions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short term sector", "label": "short term sector", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "legislators", "label": "legislators", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "technical  compromise", "label": "technical  compromise", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15 trilogue November", "label": "15 trilogue November", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Presidency", "label": "Presidency", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "23 Working November", "label": "23 Working November", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "main  elements", "label": "main  elements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Section III", "label": "Section III", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "GLOBAL", "label": "GLOBAL", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "a", "label": "a", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3  it", "label": "3  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental  platforms", "label": "rental  platforms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  Regulation", "label": "competent  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where  it", "label": "where  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "active  hosts", "label": "active  hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Consequently  threshold", "label": "Consequently  threshold", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "active 2 listings", "label": "active 2 listings", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "digital registration format", "label": "digital registration format", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5  Information", "label": "5  Information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4 registration procedures", "label": "4 registration procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "reasonable  cost", "label": "reasonable  cost", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "specific registration procedures", "label": "specific registration procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national appeal level", "label": "national appeal level", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "confidential registration period", "label": "confidential registration period", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "18  months", "label": "18  months", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration it", "label": "registration it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national registration law", "label": "national registration law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "undue term rental delay", "label": "undue term rental delay", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "invalid registration number", "label": "invalid registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "undue term delay", "label": "undue term delay", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration host", "label": "registration host", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration number", "label": "registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "6(4 data Regulation", "label": "6(4 data Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental term Article", "label": "term rental term Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "extra  step", "label": "extra  step", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent registration numbers", "label": "competent registration numbers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "invalid  it", "label": "invalid  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "personal  data", "label": "personal  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "updated registration information", "label": "updated registration information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "respective registration unit", "label": "respective registration unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cases", "label": "cases", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant  Article", "label": "pursuant  Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  authority", "label": "competent  authority", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "order", "label": "order", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "suspension", "label": "suspension", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where registration procedure", "label": "where registration procedure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "area", "label": "area", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental host", "label": "short accommodation rental host", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "also  assessments", "label": "also  assessments", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "general monitoring obligation", "label": "general monitoring obligation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "application", "label": "application", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Digital Services assessments", "label": "Digital Services assessments", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "automated Digital Entry way", "label": "automated Digital Entry way", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "seamless Digital Entry Commission", "label": "seamless Digital Entry Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "implementing examination procedure", "label": "implementing examination procedure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Moreover  interoperability", "label": "Moreover  interoperability", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "technical Application Programming Commission", "label": "technical Application Programming Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "technical  interface", "label": "technical  interface", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "However  it", "label": "However  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "procedural Commission groups", "label": "procedural Commission groups", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Commission evaluation", "label": "Commission evaluation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "centralised Digital Entry Point", "label": "centralised Digital Entry Point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "criminal Member offences", "label": "criminal Member offences", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national term law", "label": "national term law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "powers", "label": "powers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "information requirements", "label": "information requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental term platforms", "label": "term rental term platforms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "particular European Council20", "label": "particular European Council20", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "committee", "label": "committee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "directly Member States", "label": "directly Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "designated  authorities", "label": "designated  authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "years Member Commission", "label": "years Member Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "years  Commission", "label": "years  Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "main  findings", "label": "main  findings", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "which", "label": "which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Economic European Regions", "label": "Economic European Regions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Finally  Regulation", "label": "Finally  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "months  force", "label": "months  force", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "new Digital Entry application", "label": "new Digital Entry application", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2022/0358  Proposal", "label": "2022/0358  Proposal", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "p.", "label": "p.", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Data Protection Supervisor7", "label": "national Data Protection Supervisor7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "REV", "label": "REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7 sk EN", "label": "7 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "8 COMPET.1 EN", "label": "8 COMPET.1 EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "9 sk EN", "label": "9 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "10 sk EN", "label": "10 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "11 sk EN", "label": "11 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "12 sk EN", "label": "12 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "13 sk EN", "label": "13 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "14 sk EN", "label": "14 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15 sk EN", "label": "15 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "16 sk EN", "label": "16 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "17 sk EN", "label": "17 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "18 sk EN", "label": "18 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "19 sk EN", "label": "19 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "20 sk EN", "label": "20 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "21 sk EN", "label": "21 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "22 sk EN", "label": "22 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "23 sk EN", "label": "23 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "24 sk EN", "label": "24 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "25 sk EN", "label": "25 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "26 sk EN", "label": "26 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "27 sk EN", "label": "27 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "28 sk EN", "label": "28 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "29 sk EN", "label": "29 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "30 sk EN", "label": "30 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "33 sk EN", "label": "33 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "34 sk EN", "label": "34 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "36 sk EN", "label": "36 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "37 sk EN", "label": "37 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "39 sk EN", "label": "39 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "40 sk EN", "label": "40 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "41 sk EN", "label": "41 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "42 sk EN", "label": "42 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "44 sk EN", "label": "44 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "45 sk EN", "label": "45 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "46 sk EN", "label": "46 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "47 sk EN", "label": "47 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "48 sk EN", "label": "48 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "49 sk EN", "label": "49 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "50 sk EN", "label": "50 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "51 sk EN", "label": "51 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "52 sk EN", "label": "52 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "53 sk EN", "label": "53 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "54 sk EN", "label": "54 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Short accommodation rental services", "label": "Short accommodation rental services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such accommodation hotels", "label": "such accommodation hotels", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "volume", "label": "volume", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "significantly platform economy", "label": "significantly platform economy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rapid tourism growth", "label": "rapid tourism growth", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "long term rents", "label": "long term rents", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "authorities", "label": "authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "appropriate policy responses", "label": "appropriate policy responses", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Public  authorities", "label": "Public  authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental term platforms", "label": "rental term platforms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "legal  obligations", "label": "legal  obligations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "related Member procedures", "label": "related Member procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "large  majority", "label": "large  majority", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "internal accommodation rental market", "label": "internal accommodation rental market", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "balanced tourism that", "label": "balanced tourism that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "targeted Union level", "label": "targeted Union level", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental which", "label": "short accommodation rental which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "effective  manner", "label": "effective  manner", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where Member States", "label": "where Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such transparency requirements", "label": "such transparency requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental Member States", "label": "rental Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  schemes", "label": "such  schemes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "uniform Member States", "label": "uniform Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "present term Regulation", "label": "present term Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Member States", "label": "Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "internal data market", "label": "internal data market", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "possible market access data", "label": "possible market access data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant registration number", "label": "relevant registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "health consumer requirements", "label": "health consumer requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "available registration them", "label": "available registration them", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "responsible  data", "label": "responsible  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental territory", "label": "short accommodation rental territory", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "clear  authorisation", "label": "clear  authorisation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where term Articles", "label": "where term Articles", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "thereof  delay", "label": "thereof  delay", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such quality requirements", "label": "such quality requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European European Council8", "label": "European European Council8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "public housing that", "label": "public housing that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "objective", "label": "objective", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "uniform Member that", "label": "uniform Member that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Union law", "label": "Union law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such authorisation requirement", "label": "such authorisation requirement", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "traders", "label": "traders", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "requirement", "label": "requirement", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Accordingly  it", "label": "Accordingly  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such Member areas", "label": "such Member areas", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "future  use", "label": "future  use", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national customs law", "label": "national customs law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental services", "label": "short accommodation rental services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "a term year", "label": "a term year", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such trailer accommodations", "label": "such trailer accommodations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "guests", "label": "guests", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "9 Registration procedures", "label": "9 Registration procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Such  data", "label": "Such  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental term that", "label": "term rental term that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental activity data", "label": "rental activity data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "provision", "label": "provision", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short term basis", "label": "short term basis", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short  term", "label": "short  term", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  business", "label": "such  business", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "similar apartment data", "label": "similar apartment data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "accommodation", "label": "accommodation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "electronic  which", "label": "electronic  which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "direct  Regulation", "label": "direct  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "they", "label": "they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "economic  compensation", "label": "economic  compensation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  Article", "label": "competent  Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  data", "label": "such  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "unique  data", "label": "unique  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "properly  hosts", "label": "properly  hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent Member which", "label": "competent Member which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental registration hosts", "label": "term rental registration hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "one registration unit", "label": "one registration unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regional Member level", "label": "regional Member level", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Misuse", "label": "Misuse", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Registration obligations", "label": "Registration obligations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national population statistics", "label": "national population statistics", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "common Member that", "label": "common Member that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "precise  unit", "label": "precise  unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Hosts", "label": "Hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant identity Regulation", "label": "pursuant identity Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "reasonable  time", "label": "reasonable  time", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "reasonable  which", "label": "reasonable  which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "administrative  question", "label": "administrative  question", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "also  hosts", "label": "also  hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "required  documentation", "label": "required  documentation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "offline  service", "label": "offline  service", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "skilled  users", "label": "skilled  users", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent accommodation rental authorities", "label": "competent accommodation rental authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national contact unit", "label": "national contact unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "apartment  unit", "label": "apartment  unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "apartment  that", "label": "apartment  that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "far authorisation scheme", "label": "far authorisation scheme", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Directive 2006/123 Directive EC", "label": "Directive 2006/123 Directive EC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "market access that", "label": "market access that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short term rental services", "label": "short term rental services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "automatic  issuance", "label": "automatic  issuance", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent Union law", "label": "competent Union law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "host", "label": "host", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "other  purposes", "label": "other  purposes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "different  platforms", "label": "different  platforms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "other accommodation rental that", "label": "other accommodation rental that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "maximum bed unit", "label": "maximum bed unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "maximum bed places", "label": "maximum bed places", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "equal  which", "label": "equal  which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national accessibility requirements", "label": "national accessibility requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "additional  services", "label": "additional  services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "remuneration", "label": "remuneration", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "discrimination  they", "label": "discrimination  they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regulatory European Union", "label": "regulatory European Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2006/123 authorisation EC", "label": "2006/123 authorisation EC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where hosting arrangements", "label": "where hosting arrangements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "temporary  protection", "label": "temporary  protection", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "other safety hosts", "label": "other safety hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "information", "label": "information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "only registration number", "label": "only registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "original reference booking", "label": "original reference booking", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "subsequent  registrations", "label": "subsequent  registrations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "supporting  documentation", "label": "supporting  documentation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short- accommodation rental services", "label": "short- accommodation rental services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "even  information", "label": "even  information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2016/679 data protection EU", "label": "2016/679 data protection EU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  which", "label": "competent  which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration Regulation", "label": "registration Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant redress paragraphs", "label": "pursuant redress paragraphs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where registration it", "label": "where registration it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "manifest  host", "label": "manifest  host", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "orders", "label": "orders", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "individual Uniform Resource listings", "label": "individual Uniform Resource listings", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national  law", "label": "national  law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "corresponding accommodation rental fraud", "label": "corresponding accommodation rental fraud", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "additional Digital Entry Point", "label": "additional Digital Entry Point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "incorrect registration number", "label": "incorrect registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "online diligence consumers", "label": "online diligence consumers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "distance traders", "label": "distance traders", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental that", "label": "short accommodation rental that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "peer accommodation rental who", "label": "peer accommodation rental who", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "necessarily Union law", "label": "necessarily Union law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national  it", "label": "national  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short rental services", "label": "short rental services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "specifically accommodation rental data", "label": "specifically accommodation rental data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "assessment", "label": "assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "automated  tools", "label": "automated  tools", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Member which", "label": "Member which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regular activity basis", "label": "regular activity basis", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  unit", "label": "such  unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "night", "label": "night", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental  platform", "label": "rental  platform", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "possession", "label": "possession", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "so  they", "label": "so  they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "that", "label": "that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "otherwise Union law", "label": "otherwise Union law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Commission", "label": "Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "same  hosts", "label": "same  hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "applicable  rules", "label": "applicable  rules", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "additional  information", "label": "additional  information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "applicable registration hosts", "label": "applicable registration hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "machine data they", "label": "machine data they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4250  Union", "label": "4250  Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent compliance authorities", "label": "competent compliance authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant  data", "label": "relevant  data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "already place that", "label": "already place that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "machine transmission requirements", "label": "machine transmission requirements", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Digital Entry Point", "label": "Digital Entry Point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Member State", "label": "Member State", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant registration listings", "label": "relevant registration listings", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national  coordinator", "label": "national  coordinator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national contact coordinator", "label": "national contact coordinator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Collecting", "label": "Collecting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "also  that", "label": "also  that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Digital Entry Point", "label": "national Digital Entry Point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "timely data sharing processes", "label": "timely data sharing processes", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Digital Entry Points", "label": "Digital Entry Points", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "self- compliance burden", "label": "self- compliance burden", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "coordination group", "label": "coordination group", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "automatically Application Programming Interface", "label": "automatically Application Programming Interface", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "individual Member State", "label": "individual Member State", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where Member State", "label": "where Member State", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant ex post Regulation", "label": "pursuant ex post Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "long term they", "label": "long term they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Digital Entry Regulation", "label": "Digital Entry Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Digital Entry implementing", "label": "national Digital Entry implementing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental accommodation rental Union", "label": "rental accommodation rental Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "standardised \u258c registration numbers", "label": "standardised \u258c registration numbers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national  coordinators", "label": "national  coordinators", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where  Commission", "label": "where  Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "preparatory Point Coordination Group", "label": "preparatory Point Coordination Group", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "25  Alignment", "label": "25  Alignment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "administrative data procedures", "label": "administrative data procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "entities", "label": "entities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Member States", "label": "national Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "general Member powers", "label": "general Member powers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "proportionate  framework", "label": "proportionate  framework", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regulation European Council12", "label": "Regulation European Council12", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regional  that", "label": "regional  that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "activity territory", "label": "activity territory", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "only  rules", "label": "only  rules", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "free European Union", "label": "free European Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "data rules", "label": "data rules", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regulation accommodation rental 2016/679", "label": "Regulation accommodation rental 2016/679", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant  which", "label": "relevant  which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regulation data 2016/679", "label": "Regulation data 2016/679", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "applicable activity data", "label": "applicable activity data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2016/679 protection EU", "label": "2016/679 protection EU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "27 Activity data", "label": "27 Activity data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "official  statistics", "label": "official  statistics", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "data", "label": "data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European European tourism", "label": "European European tourism", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "when registration this", "label": "when registration this", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "new business models", "label": "new business models", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "same activity data", "label": "same activity data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "sectorial data spaces", "label": "sectorial data spaces", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Those", "label": "Those", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental accommodation services", "label": "term rental accommodation services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "30 Member States", "label": "30 Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "effective  Regulation", "label": "effective  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2022/2065  obligations", "label": "2022/2065  obligations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Chapter IV Chapter 2022/2065", "label": "Chapter IV Chapter 2022/2065", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  Commission", "label": "competent  Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Chapter Regulation", "label": "Chapter Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Consequently  Commission", "label": "Consequently  Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "online enforcement Regulation", "label": "online enforcement Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant Digital Entry unit", "label": "relevant Digital Entry unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "them", "label": "them", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  penalties", "label": "such  penalties", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2000/31 European Council14", "label": "2000/31 European Council14", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "notably data sharing obligations", "label": "notably data sharing obligations", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "European which", "label": "European which", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "internal assistance market", "label": "internal assistance market", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Annex host", "label": "Annex host", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "online  procedures", "label": "online  procedures", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "one Member they", "label": "one Member they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "thereby compliance hosts", "label": "thereby compliance hosts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "functionality", "label": "functionality", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "solving European Regulation", "label": "solving European Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Commission Implementing Regulation", "label": "Commission Implementing Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "only Council C/2022/5628", "label": "only Council C/2022/5628", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "broad  evaluation", "label": "broad  evaluation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "border Member cooperation", "label": "border Member cooperation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "better Union Union", "label": "better Union Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5 European Union", "label": "5 European Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "what", "label": "what", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "objectives", "label": "objectives", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "fundamental  right", "label": "fundamental  right", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "EU  2016/679", "label": "EU  2016/679", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "personal data processing", "label": "personal data processing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Regulation  2016/679", "label": "Regulation  2016/679", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "supervisory data authorities", "label": "supervisory data authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "personal  Regulation", "label": "personal  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Data Protection Supervisor", "label": "Data Protection Supervisor", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such Union Regulation", "label": "such Union Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "months  Regulation", "label": "months  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national building REV", "label": "national building REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "32 sk EN", "label": "32 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Directive", "label": "Directive", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "technical Information Society services", "label": "technical Information Society services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "furnished  that", "label": "furnished  that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short accommodation rental service", "label": "short accommodation rental service", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "It", "label": "It", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short Annex Regulation", "label": "short Annex Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4(6 Directive REV", "label": "4(6 Directive REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "35 sk EN", "label": "35 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "12", "label": "12", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4  Regulation", "label": "4  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration procedure", "label": "registration procedure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Member Chapter", "label": "national Member Chapter", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such data transmission requirement", "label": "such data transmission requirement", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent registration territory", "label": "competent registration territory", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short term rental unit", "label": "short term rental unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "so registration number", "label": "so registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration numbers", "label": "registration numbers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "easily  registry", "label": "easily  registry", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  REV", "label": "such  REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "38 sk EN", "label": "38 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registered business registration that", "label": "registered business registration that", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "legal contact telephone persons", "label": "legal contact telephone persons", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent mail authority", "label": "competent mail authority", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2", "label": "2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2(2)(a  submission", "label": "2(2)(a  submission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registration Article", "label": "registration Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Where Member States", "label": "Where Member States", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "term rental term services", "label": "term rental term services", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Member this", "label": "Member this", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4(2  point", "label": "4(2  point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4(2  unit", "label": "4(2  unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "registry", "label": "registry", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "competent  they", "label": "competent  they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7  Regulation", "label": "7  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5(2  it", "label": "5(2  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "undue registration delay", "label": "undue registration delay", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant registration it", "label": "pursuant registration it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "intention", "label": "intention", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "it", "label": "it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "paragraphs", "label": "paragraphs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2(2)(a  it", "label": "2(2)(a  it", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "such  information", "label": "such  information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "clearly registration REV", "label": "clearly registration REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "43 sk EN", "label": "43 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "given registration lists", "label": "given registration lists", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "13 Member Article", "label": "13 Member Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "solely  assessment", "label": "solely  assessment", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "automated  Article", "label": "automated  Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where Member unit", "label": "where Member unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "specific registration listing", "label": "specific registration listing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Member State", "label": "national Member State", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "transmission", "label": "transmission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "machine communication means", "label": "machine communication means", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4(1 Member State", "label": "4(1 Member State", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pursuant term Article", "label": "pursuant term Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "same  information", "label": "same  information", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental registration Article", "label": "rental registration Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "strictly  purpose", "label": "strictly  purpose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental registration platforms", "label": "rental registration platforms", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "implementing  acts", "label": "implementing  acts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "examination Article", "label": "examination Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "respective Digital Entry Point", "label": "respective Digital Entry Point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "national Member Commission", "label": "national Member Commission", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "procedure", "label": "procedure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "harmonised data sharing", "label": "harmonised data sharing", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "particular coordination group", "label": "particular coordination group", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "common registration numbers", "label": "common registration numbers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "intended  purpose", "label": "intended  purpose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "short Union law", "label": "short Union law", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Competent  authorities", "label": "Competent  authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "months activity receipt", "label": "months activity receipt", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "respective  territories", "label": "respective  territories", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "where business this", "label": "where business this", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "activities", "label": "activities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "available bed unit", "label": "available bed unit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "statistical European Council25", "label": "statistical European Council25", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Access", "label": "Access", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "appropriate data protection", "label": "appropriate data protection", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "public  lists", "label": "public  lists", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "paragraph", "label": "paragraph", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Chapter references", "label": "Chapter references", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7(1  Regulation", "label": "7(1  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "IV  they", "label": "IV  they", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "also Articles Regulation", "label": "also Articles Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Authorities", "label": "Authorities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7(3 Digital Entry Regulation", "label": "7(3 Digital Entry Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Where  reference", "label": "Where  reference", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5  Regulation", "label": "5  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "following  point", "label": "following  point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "13 European Council", "label": "13 European Council", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "third accommodation rental following", "label": "third accommodation rental following", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "new registration number", "label": "new registration number", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "report", "label": "report", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "relevant Member Article", "label": "relevant Member Article", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rental accommodation rental REV", "label": "rental accommodation rental REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "55 sk EN", "label": "55 sk EN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "19  Regulation", "label": "19  Regulation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "twentieth European Union", "label": "twentieth European Union", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15693/1/23 COMPET.1 REV", "label": "15693/1/23 COMPET.1 REV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "56 sk EN", "label": "56 sk EN", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "", "label": "2", "to": "", "width": 1}, {"arrows": "to", "from": "", "label": "Council of", "to": "1 European Union Brussels", "width": 1}, {"arrows": "to", "from": "", "label": "TOUR", "to": "15693/1/23", "width": 1}, {"arrows": "to", "from": "", "label": "CONSOM", "to": "Interinstitutional  File", "width": 1}, {"arrows": "to", "from": "", "label": "NOTE From", "to": "General Council", "width": 1}, {"arrows": "to", "from": "", "label": "Subject", "to": "final compromise agreement", "width": 1}, {"arrows": "to", "from": "", "label": "WORK WITHIN", "to": "COUNCIL", "width": 1}, {"arrows": "to", "from": "", "label": "Information by", "to": "hosts", "width": 1}, {"arrows": "to", "from": "", "label": "Article", "to": "competent  authorities", "width": 1}, {"arrows": "to", "from": "", "label": "Compliance by", "to": "design", "width": 1}, {"arrows": "to", "from": "", "label": "amended", "to": "Regulation", "width": 1}, {"arrows": "to", "from": "", "label": "Text with", "to": "EEA relevance", "width": 1}, {"arrows": "to", "from": "", "label": "PARLIAMENT", "to": "EUROPEAN UNION", "width": 1}, {"arrows": "to", "from": "", "label": "EC of", "to": "internal European market", "width": 1}, {"arrows": "to", "from": "", "label": "Regulation", "to": "2000/31 Digital EC", "width": 1}, {"arrows": "to", "from": "", "label": "910/2014 of", "to": "registration procedures", "width": 1}, {"arrows": "to", "from": "", "label": "Recommendation of", "to": "sized Commission enterprises", "width": 1}, {"arrows": "to", "from": "", "label": "182/2011 of", "to": "European Council11", "width": 1}, {"arrows": "to", "from": "", "label": "Regulation", "to": "95/46 European EC", "width": 1}, {"arrows": "to", "from": "", "label": "692/2011 of", "to": "European Council Directive", "width": 1}, {"arrows": "to", "from": "", "label": "be effective", "to": "Such  penalties", "width": 1}, {"arrows": "to", "from": "", "label": "EC of", "to": "electronic Internal commerce", "width": 1}, {"arrows": "to", "from": "", "label": "45/2001", "to": "1247/2002 EEA relevance", "width": 1}, {"arrows": "to", "from": "", "label": "Footnote", "to": "OP", "width": 1}, {"arrows": "to", "from": "", "label": "ANNEX", "to": "15693/1/23 18 REV", "width": 1}, {"arrows": "to", "from": "", "label": "ADOPTED", "to": "2 matter Scope", "width": 1}, {"arrows": "to", "from": "", "label": "Union", "to": "European  statistics", "width": 1}, {"arrows": "to", "from": "", "label": "2006/123", "to": "online intermediation services", "width": 1}, {"arrows": "to", "from": "", "label": "Regulation", "to": "digital European Directives", "width": 1}, {"arrows": "to", "from": "", "label": "provision of", "to": "55.3 trailer Regulation", "width": 1}, {"arrows": "to", "from": "", "label": "EU of", "to": "mutual 23 taxes", "width": 1}, {"arrows": "to", "from": "", "label": "Directive", "to": "77/799 Council EEC", "width": 1}, {"arrows": "to", "from": "", "label": "Regulation", "to": "statistical EC domains", "width": 1}, {"arrows": "to", "from": "", "label": "No", "to": "territorial  statistics", "width": 1}, {"arrows": "to", "from": "", "label": "-1", "to": "4 Registration procedures", "width": 1}, {"arrows": "to", "from": "", "label": "Compliance by", "to": "7  design", "width": 1}, {"arrows": "to", "from": "", "label": "reporting", "to": "CHAPTER III Data", "width": 1}, {"arrows": "to", "from": "", "label": "numbers", "to": "term rental activity data", "width": 1}, {"arrows": "to", "from": "", "label": "Article", "to": "10 Digital Entry Points", "width": 1}, {"arrows": "to", "from": "", "label": "facilitate", "to": "12(2 term Article", "width": 1}, {"arrows": "to", "from": "", "label": "Coordination of", "to": "11 Digital Entry Points", "width": 1}, {"arrows": "to", "from": "", "label": "established", "to": "Points coordination group", "width": 1}, {"arrows": "to", "from": "", "label": "Access to", "to": "12  data", "width": 1}, {"arrows": "to", "from": "", "label": "Regulation", "to": "European European Regulation", "width": 1}, {"arrows": "to", "from": "", "label": "Done at", "to": "European Council", "width": 1}, {"arrows": "to", "from": "", "label": "on", "to": "statistical European Communities", "width": 1}, {"arrows": "to", "from": "", "label": "322/97 on", "to": "89/382 European Communities", "width": 1}, {"arrows": "to", "from": "", "label": "ensure", "to": "penalties", "width": 1}, {"arrows": "to", "from": "", "label": "apply", "to": "182/2011", "width": 1}, {"arrows": "to", "from": "", "label": "Amendment to", "to": "17  Regulation", "width": 1}, {"arrows": "to", "from": "", "label": "[on", "to": "short accommodation rental Regulation", "width": 1}, {"arrows": "to", "from": "", "label": "Evaluation", "to": "18  1", "width": 1}, {"arrows": "to", "from": "2022  Commission", "label": "submitted to", "to": "short accommodation rental impact", "width": 1}, {"arrows": "to", "from": "proposal", "label": "seeks", "to": "short accommodation rental EU", "width": 1}, {"arrows": "to", "from": "proposal", "label": "took", "to": "where Working Presidency", "width": 1}, {"arrows": "to", "from": "specific data sharing", "label": "seeks", "to": "cost Data Protection parties", "width": 1}, {"arrows": "to", "from": "administrative Member that", "label": "is", "to": "internal  market", "width": 1}, {"arrows": "to", "from": "internal  market", "label": "hampered", "to": "proper rental services functioning", "width": 1}, {"arrows": "to", "from": "Opinion", "label": "delivered on", "to": "22 Social February", "width": 1}, {"arrows": "to", "from": "Opinion", "label": "delivered on", "to": "15.3.2023\u201316.3.20233", "width": 1}, {"arrows": "to", "from": "Opinion", "label": "delivered on", "to": "16 Data Protection December", "width": 1}, {"arrows": "to", "from": "European Committee", "label": "appointed", "to": "Greens Kim van proposal", "width": 1}, {"arrows": "to", "from": "IMCO Committee", "label": "adopted", "to": "interinstitutional  negotiations", "width": 1}, {"arrows": "to", "from": "European Parliament", "label": "confirmed", "to": "plenary  session", "width": 1}, {"arrows": "to", "from": "European Parliament", "label": "believes", "to": "overall  compromise", "width": 1}, {"arrows": "to", "from": "European Parliament", "label": "invited", "to": "European act", "width": 1}, {"arrows": "to", "from": "Working Party", "label": "started", "to": "11 Czech November", "width": 1}, {"arrows": "to", "from": "work", "label": "continued during", "to": "Working Party 9", "width": 1}, {"arrows": "to", "from": "Competitiveness Council", "label": "reached", "to": "thus European Parliament", "width": 1}, {"arrows": "to", "from": "first trilogue meeting", "label": "held under", "to": "11 Spanish October", "width": 1}, {"arrows": "to", "from": "institutions", "label": "recognised", "to": "short term sector", "width": 1}, {"arrows": "to", "from": "legislators", "label": "presented", "to": "technical  compromise", "width": 1}, {"arrows": "to", "from": "legislators", "label": "reached", "to": "15 trilogue November", "width": 1}, {"arrows": "to", "from": "Presidency", "label": "reported on", "to": "23 Working November", "width": 1}, {"arrows": "to", "from": "main  elements", "label": "set", "to": "Section III", "width": 1}, {"arrows": "to", "from": "GLOBAL", "label": "COMPROMISE", "to": "a", "width": 1}, {"arrows": "to", "from": "3  it", "label": "deleted", "to": "rental  platforms", "width": 1}, {"arrows": "to", "from": "rental  platforms", "label": "ensure", "to": "competent  Regulation", "width": 1}, {"arrows": "to", "from": "where  it", "label": "has", "to": "active  hosts", "width": 1}, {"arrows": "to", "from": "Consequently  threshold", "label": "set at", "to": "active 2 listings", "width": 1}, {"arrows": "to", "from": "hosts", "label": "ensure", "to": "digital registration format", "width": 1}, {"arrows": "to", "from": "hosts", "label": "provided by", "to": "5  Information", "width": 1}, {"arrows": "to", "from": "4 registration procedures", "label": "specified", "to": "reasonable  cost", "width": 1}, {"arrows": "to", "from": "specific registration procedures", "label": "included", "to": "national appeal level", "width": 1}, {"arrows": "to", "from": "confidential registration period", "label": "deleted", "to": "18  months", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "inform", "to": "registration it", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "be possible", "to": "national registration law", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "suspended", "to": "undue term rental delay", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "ensure", "to": "invalid registration number", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "withdraw", "to": "undue term delay", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "suspended", "to": "registration host", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "referred to", "to": "registration number", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "share with", "to": "6(4 data Regulation", "width": 1}, {"arrows": "to", "from": "competent  authorities", "label": "draw", "to": "term rental term Article", "width": 1}, {"arrows": "to", "from": "extra  step", "label": "added", "to": "competent registration numbers", "width": 1}, {"arrows": "to", "from": "invalid  it", "label": "kept", "to": "registration number", "width": 1}, {"arrows": "to", "from": "registration number", "label": "included in", "to": "personal  data", "width": 1}, {"arrows": "to", "from": "registration number", "label": "have", "to": "updated registration information", "width": 1}, {"arrows": "to", "from": "registration number", "label": "required", "to": "respective registration unit", "width": 1}, {"arrows": "to", "from": "registration number", "label": "ensure", "to": "cases", "width": 1}, {"arrows": "to", "from": "registration number", "label": "issued", "to": "pursuant  Article", "width": 1}, {"arrows": "to", "from": "registration number", "label": "confirms", "to": "competent  authority", "width": 1}, {"arrows": "to", "from": "order", "label": "made clear", "to": "suspension", "width": 1}, {"arrows": "to", "from": "where registration procedure", "label": "added", "to": "area", "width": 1}, {"arrows": "to", "from": "where registration procedure", "label": "made available", "to": "short accommodation rental host", "width": 1}, {"arrows": "to", "from": "where registration procedure", "label": "establish", "to": "pursuant  Article", "width": 1}, {"arrows": "to", "from": "also  assessments", "label": "clarified", "to": "general monitoring obligation", "width": 1}, {"arrows": "to", "from": "general monitoring obligation", "label": "lead to", "to": "application", "width": 1}, {"arrows": "to", "from": "Digital Services assessments", "label": "inserted", "to": "automated Digital Entry way", "width": 1}, {"arrows": "to", "from": "seamless Digital Entry Commission", "label": "have", "to": "implementing examination procedure", "width": 1}, {"arrows": "to", "from": "Moreover  interoperability", "label": "implemented", "to": "technical Application Programming Commission", "width": 1}, {"arrows": "to", "from": "technical Application Programming Commission", "label": "implemented", "to": "technical  interface", "width": 1}, {"arrows": "to", "from": "However  it", "label": "was", "to": "procedural Commission groups", "width": 1}, {"arrows": "to", "from": "Commission evaluation", "label": "include", "to": "centralised Digital Entry Point", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "intended", "to": "criminal Member offences", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "apply to", "to": "national term law", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "exercised in", "to": "powers", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "comply with", "to": "information requirements", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "lays", "to": "term rental term platforms", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "is without", "to": "particular European Council20", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "be", "to": "committee", "width": 1}, {"arrows": "to", "from": "Regulation", "label": "be", "to": "directly Member States", "width": 1}, {"arrows": "to", "from": "designated  authorities", "label": "report on", "to": "years Member Commission", "width": 1}, {"arrows": "to", "from": "years  Commission", "label": "submit", "to": "main  findings", "width": 1}, {"arrows": "to", "from": "years  Commission", "label": "designate", "to": "which", "width": 1}, {"arrows": "to", "from": "years  Commission", "label": "evaluate", "to": "Economic European Regions", "width": 1}, {"arrows": "to", "from": "Finally  Regulation", "label": "be applicable", "to": "months  force", "width": 1}, {"arrows": "to", "from": "months  force", "label": "adapt", "to": "new Digital Entry application", "width": 1}, {"arrows": "to", "from": "2022/0358  Proposal", "label": "ANNEX", "to": "short accommodation rental Regulation", "width": 1}, {"arrows": "to", "from": "p.", "label": "Having", "to": "national Data Protection Supervisor7", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "7 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "8 COMPET.1 EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "9 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "10 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "11 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "12 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "13 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "14 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "15 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "16 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "17 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "18 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "19 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "20 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "21 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "22 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "23 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "24 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "25 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "26 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "27 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "28 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "29 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "30 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "33 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "34 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "36 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "37 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "39 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "40 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "41 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "42 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "44 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "45 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "46 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "47 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "48 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "49 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "50 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "51 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "52 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "53 sk EN", "width": 1}, {"arrows": "to", "from": "REV", "label": "ANNEX", "to": "54 sk EN", "width": 1}, {"arrows": "to", "from": "Short accommodation rental services", "label": "existed for many", "to": "such accommodation hotels", "width": 1}, {"arrows": "to", "from": "volume", "label": "increasing", "to": "significantly platform economy", "width": 1}, {"arrows": "to", "from": "rapid tourism growth", "label": "triggered", "to": "long term rents", "width": 1}, {"arrows": "to", "from": "authorities", "label": "focuses on", "to": "appropriate policy responses", "width": 1}, {"arrows": "to", "from": "Public  authorities", "label": "taking", "to": "rental term platforms", "width": 1}, {"arrows": "to", "from": "legal  obligations", "label": "diverge", "to": "related Member procedures", "width": 1}, {"arrows": "to", "from": "large  majority", "label": "intermediating", "to": "internal accommodation rental market", "width": 1}, {"arrows": "to", "from": "balanced tourism that", "label": "established at", "to": "targeted Union level", "width": 1}, {"arrows": "to", "from": "short accommodation rental which", "label": "laid", "to": "effective  manner", "width": 1}, {"arrows": "to", "from": "where Member States", "label": "laid", "to": "such transparency requirements", "width": 1}, {"arrows": "to", "from": "rental Member States", "label": "decide", "to": "such  schemes", "width": 1}, {"arrows": "to", "from": "uniform Member States", "label": "be able", "to": "present term Regulation", "width": 1}, {"arrows": "to", "from": "Member States", "label": "is in", "to": "internal data market", "width": 1}, {"arrows": "to", "from": "Member States", "label": "required", "to": "possible market access data", "width": 1}, {"arrows": "to", "from": "Member States", "label": "ensure", "to": "relevant registration number", "width": 1}, {"arrows": "to", "from": "Member States", "label": "be possible", "to": "health consumer requirements", "width": 1}, {"arrows": "to", "from": "Member States", "label": "continue", "to": "available registration them", "width": 1}, {"arrows": "to", "from": "Member States", "label": "designate", "to": "responsible  data", "width": 1}, {"arrows": "to", "from": "Member States", "label": "provide", "to": "short accommodation rental territory", "width": 1}, {"arrows": "to", "from": "Member States", "label": "ensure", "to": "term rental term platforms", "width": 1}, {"arrows": "to", "from": "Member States", "label": "4a of", "to": "clear  authorisation", "width": 1}, {"arrows": "to", "from": "Member States", "label": "lay", "to": "where term Articles", "width": 1}, {"arrows": "to", "from": "Member States", "label": "notify", "to": "thereof  delay", "width": 1}, {"arrows": "to", "from": "such quality requirements", "label": "affect", "to": "European European Council8", "width": 1}, {"arrows": "to", "from": "public housing that", "label": "recognised by", "to": "objective", "width": 1}, {"arrows": "to", "from": "uniform Member that", "label": "support", "to": "Union law", "width": 1}, {"arrows": "to", "from": "Union law", "label": "required", "to": "such authorisation requirement", "width": 1}, {"arrows": "to", "from": "Union law", "label": "is appropriate", "to": "traders", "width": 1}, {"arrows": "to", "from": "Union law", "label": "provided", "to": "requirement", "width": 1}, {"arrows": "to", "from": "Accordingly  it", "label": "affect", "to": "such Member areas", "width": 1}, {"arrows": "to", "from": "future  use", "label": "be in", "to": "national customs law", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "concern", "to": "a term year", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "provided on", "to": "such trailer accommodations", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "laid", "to": "guests", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "enable competent", "to": "9 Registration procedures", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "amount to", "to": "term rental term platforms", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "processed", "to": "Such  data", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "applies to", "to": "term rental term that", "width": 1}, {"arrows": "to", "from": "short accommodation rental services", "label": "impact of", "to": "rental activity data", "width": 1}, {"arrows": "to", "from": "provision", "label": "considered", "to": "short term basis", "width": 1}, {"arrows": "to", "from": "short  term", "label": "limited to", "to": "such  business", "width": 1}, {"arrows": "to", "from": "similar apartment data", "label": "apply to", "to": "accommodation", "width": 1}, {"arrows": "to", "from": "electronic  which", "label": "excluded from", "to": "direct  Regulation", "width": 1}, {"arrows": "to", "from": "they", "label": "covered by", "to": "economic  compensation", "width": 1}, {"arrows": "to", "from": "they", "label": "ensure", "to": "competent  Article", "width": 1}, {"arrows": "to", "from": "personal  data", "label": "provides", "to": "such  data", "width": 1}, {"arrows": "to", "from": "unique  data", "label": "ensure", "to": "properly  hosts", "width": 1}, {"arrows": "to", "from": "competent Member which", "label": "be for competent", "to": "term rental registration hosts", "width": 1}, {"arrows": "to", "from": "one registration unit", "label": "be", "to": "regional Member level", "width": 1}, {"arrows": "to", "from": "one registration unit", "label": "understood as", "to": "Misuse", "width": 1}, {"arrows": "to", "from": "Registration obligations", "label": "be", "to": "national population statistics", "width": 1}, {"arrows": "to", "from": "common Member that", "label": "is necessary", "to": "precise  unit", "width": 1}, {"arrows": "to", "from": "Hosts", "label": "be able", "to": "pursuant identity Regulation", "width": 1}, {"arrows": "to", "from": "Hosts", "label": "have", "to": "reasonable  time", "width": 1}, {"arrows": "to", "from": "reasonable  which", "label": "be", "to": "administrative  question", "width": 1}, {"arrows": "to", "from": "also  hosts", "label": "ensured", "to": "required  documentation", "width": 1}, {"arrows": "to", "from": "offline  service", "label": "be available", "to": "skilled  users", "width": 1}, {"arrows": "to", "from": "competent accommodation rental authorities", "label": "provide", "to": "national contact unit", "width": 1}, {"arrows": "to", "from": "apartment  unit", "label": "required from", "to": "apartment  that", "width": 1}, {"arrows": "to", "from": "far authorisation scheme", "label": "be", "to": "Directive 2006/123 Directive EC", "width": 1}, {"arrows": "to", "from": "market access that", "label": "is without", "to": "short term rental services", "width": 1}, {"arrows": "to", "from": "automatic  issuance", "label": "is without", "to": "competent Union law", "width": 1}, {"arrows": "to", "from": "host", "label": "include", "to": "other  purposes", "width": 1}, {"arrows": "to", "from": "host", "label": "obliged", "to": "different  platforms", "width": 1}, {"arrows": "to", "from": "host", "label": "given", "to": "competent  authority", "width": 1}, {"arrows": "to", "from": "host", "label": "issued pursuant", "to": "other accommodation rental that", "width": 1}, {"arrows": "to", "from": "maximum bed unit", "label": "provide", "to": "maximum bed places", "width": 1}, {"arrows": "to", "from": "equal  which", "label": "require", "to": "national accessibility requirements", "width": 1}, {"arrows": "to", "from": "additional  services", "label": "be able", "to": "remuneration", "width": 1}, {"arrows": "to", "from": "discrimination  they", "label": "comply with", "to": "regulatory European Union", "width": 1}, {"arrows": "to", "from": "requirement", "label": "used", "to": "2006/123 authorisation EC", "width": 1}, {"arrows": "to", "from": "where hosting arrangements", "label": "be able", "to": "temporary  protection", "width": 1}, {"arrows": "to", "from": "other safety hosts", "label": "be able", "to": "information", "width": 1}, {"arrows": "to", "from": "information", "label": "verified by competent", "to": "only registration number", "width": 1}, {"arrows": "to", "from": "information", "label": "reflect", "to": "original reference booking", "width": 1}, {"arrows": "to", "from": "information", "label": "ensure", "to": "subsequent  registrations", "width": 1}, {"arrows": "to", "from": "information", "label": "require", "to": "supporting  documentation", "width": 1}, {"arrows": "to", "from": "information", "label": "ensure", "to": "short- accommodation rental services", "width": 1}, {"arrows": "to", "from": "even  information", "label": "retained for", "to": "2016/679 data protection EU", "width": 1}, {"arrows": "to", "from": "competent  authority", "label": "is appropriate", "to": "competent  which", "width": 1}, {"arrows": "to", "from": "competent  authority", "label": "be", "to": "registration Regulation", "width": 1}, {"arrows": "to", "from": "competent  authority", "label": "finds", "to": "competent  authority", "width": 1}, {"arrows": "to", "from": "competent  authority", "label": "have", "to": "undue term delay", "width": 1}, {"arrows": "to", "from": "competent  authority", "label": "inform", "to": "pursuant redress paragraphs", "width": 1}, {"arrows": "to", "from": "where registration it", "label": "have", "to": "manifest  host", "width": 1}, {"arrows": "to", "from": "orders", "label": "include", "to": "individual Uniform Resource listings", "width": 1}, {"arrows": "to", "from": "invalid registration number", "label": "ensure", "to": "national  law", "width": 1}, {"arrows": "to", "from": "term rental term platforms", "label": "constitute", "to": "corresponding accommodation rental fraud", "width": 1}, {"arrows": "to", "from": "term rental term platforms", "label": "be", "to": "additional Digital Entry Point", "width": 1}, {"arrows": "to", "from": "term rental term platforms", "label": "inform without undue", "to": "incorrect registration number", "width": 1}, {"arrows": "to", "from": "online diligence consumers", "label": "lays", "to": "distance traders", "width": 1}, {"arrows": "to", "from": "short accommodation rental that", "label": "apply to online", "to": "traders", "width": 1}, {"arrows": "to", "from": "peer accommodation rental who", "label": "characterised by", "to": "necessarily Union law", "width": 1}, {"arrows": "to", "from": "national  it", "label": "complied", "to": "short rental services", "width": 1}, {"arrows": "to", "from": "short rental services", "label": "include", "to": "specifically accommodation rental data", "width": 1}, {"arrows": "to", "from": "assessment", "label": "located in", "to": "automated  tools", "width": 1}, {"arrows": "to", "from": "Member which", "label": "be able", "to": "regular activity basis", "width": 1}, {"arrows": "to", "from": "such  unit", "label": "are in", "to": "night", "width": 1}, {"arrows": "to", "from": "rental  platform", "label": "have", "to": "possession", "width": 1}, {"arrows": "to", "from": "rental  platform", "label": "base", "to": "so  they", "width": 1}, {"arrows": "to", "from": "that", "label": "maintain", "to": "otherwise Union law", "width": 1}, {"arrows": "to", "from": "that", "label": "designate", "to": "Commission", "width": 1}, {"arrows": "to", "from": "same  hosts", "label": "remain responsible", "to": "applicable  rules", "width": 1}, {"arrows": "to", "from": "additional  information", "label": "required", "to": "applicable registration hosts", "width": 1}, {"arrows": "to", "from": "machine data they", "label": "expected", "to": "4250  Union", "width": 1}, {"arrows": "to", "from": "competent compliance authorities", "label": "reduces", "to": "relevant  data", "width": 1}, {"arrows": "to", "from": "already place that", "label": "is", "to": "machine transmission requirements", "width": 1}, {"arrows": "to", "from": "Digital Entry Point", "label": "required", "to": "Member State", "width": 1}, {"arrows": "to", "from": "Digital Entry Point", "label": "designate", "to": "which", "width": 1}, {"arrows": "to", "from": "Digital Entry Point", "label": "referred to", "to": "relevant registration listings", "width": 1}, {"arrows": "to", "from": "Digital Entry Point", "label": "be responsible", "to": "national  coordinator", "width": 1}, {"arrows": "to", "from": "Member State", "label": "appoint", "to": "national  coordinator", "width": 1}, {"arrows": "to", "from": "Member State", "label": "inform", "to": "national contact coordinator", "width": 1}, {"arrows": "to", "from": "Collecting", "label": "is necessary", "to": "short- accommodation rental services", "width": 1}, {"arrows": "to", "from": "short- accommodation rental services", "label": "is", "to": "also  that", "width": 1}, {"arrows": "to", "from": "national Digital Entry Point", "label": "avoid online", "to": "timely data sharing processes", "width": 1}, {"arrows": "to", "from": "Digital Entry Points", "label": "facilitate", "to": "self- compliance burden", "width": 1}, {"arrows": "to", "from": "Digital Entry Points", "label": "support", "to": "coordination group", "width": 1}, {"arrows": "to", "from": "automatically Application Programming Interface", "label": "allow", "to": "individual Member State", "width": 1}, {"arrows": "to", "from": "where Member State", "label": "grants", "to": "pursuant ex post Regulation", "width": 1}, {"arrows": "to", "from": "long term they", "label": "imposed", "to": "Digital Entry Regulation", "width": 1}, {"arrows": "to", "from": "national Digital Entry implementing", "label": "conferred on", "to": "Commission", "width": 1}, {"arrows": "to", "from": "Commission", "label": "evaluate", "to": "rental accommodation rental Union", "width": 1}, {"arrows": "to", "from": "Commission", "label": "adopt", "to": "standardised \u258c registration numbers", "width": 1}, {"arrows": "to", "from": "Commission", "label": "keep", "to": "national  coordinators", "width": 1}, {"arrows": "to", "from": "Commission", "label": "support", "to": "coordination group", "width": 1}, {"arrows": "to", "from": "Commission", "label": "assisted by", "to": "committee", "width": 1}, {"arrows": "to", "from": "where  Commission", "label": "is of particular", "to": "preparatory Point Coordination Group", "width": 1}, {"arrows": "to", "from": "25  Alignment", "label": "ensured between", "to": "administrative data procedures", "width": 1}, {"arrows": "to", "from": "entities", "label": "facilitate", "to": "national Member States", "width": 1}, {"arrows": "to", "from": "182/2011", "label": "laying", "to": "general Member powers", "width": 1}, {"arrows": "to", "from": "proportionate  framework", "label": "is necessary", "to": "Regulation European Council12", "width": 1}, {"arrows": "to", "from": "regional  that", "label": "list", "to": "activity territory", "width": 1}, {"arrows": "to", "from": "only  rules", "label": "permitted", "to": "free European Union", "width": 1}, {"arrows": "to", "from": "data rules", "label": "set", "to": "Regulation accommodation rental 2016/679", "width": 1}, {"arrows": "to", "from": "relevant  which", "label": "is appropriate", "to": "Regulation data 2016/679", "width": 1}, {"arrows": "to", "from": "applicable activity data", "label": "allow competent", "to": "2016/679 protection EU", "width": 1}, {"arrows": "to", "from": "27 Activity data", "label": "be important", "to": "official  statistics", "width": 1}, {"arrows": "to", "from": "data", "label": "transmitted to national", "to": "European European tourism", "width": 1}, {"arrows": "to", "from": "when registration this", "label": "be able", "to": "new business models", "width": 1}, {"arrows": "to", "from": "same activity data", "label": "made available", "to": "sectorial data spaces", "width": 1}, {"arrows": "to", "from": "Those", "label": "include", "to": "term rental accommodation services", "width": 1}, {"arrows": "to", "from": "30 Member States", "label": "ensure", "to": "effective  Regulation", "width": 1}, {"arrows": "to", "from": "2022/2065  obligations", "label": "entrusted with", "to": "Chapter IV Chapter 2022/2065", "width": 1}, {"arrows": "to", "from": "competent  Commission", "label": "empowered", "to": "Chapter Regulation", "width": 1}, {"arrows": "to", "from": "Consequently  Commission", "label": "empowered", "to": "online enforcement Regulation", "width": 1}, {"arrows": "to", "from": "relevant Digital Entry unit", "label": "be for", "to": "them", "width": 1}, {"arrows": "to", "from": "such  penalties", "label": "lay", "to": "2000/31 European Council14", "width": 1}, {"arrows": "to", "from": "penalties", "label": "ensure", "to": "notably data sharing obligations", "width": 1}, {"arrows": "to", "from": "European which", "label": "provides for general", "to": "internal assistance market", "width": 1}, {"arrows": "to", "from": "Annex host", "label": "included in", "to": "online  procedures", "width": 1}, {"arrows": "to", "from": "one Member they", "label": "allowed", "to": "thereby compliance hosts", "width": 1}, {"arrows": "to", "from": "functionality", "label": "provided by", "to": "solving European Regulation", "width": 1}, {"arrows": "to", "from": "Commission Implementing Regulation", "label": "setting", "to": "only Council C/2022/5628", "width": 1}, {"arrows": "to", "from": "broad  evaluation", "label": "take into", "to": "border Member cooperation", "width": 1}, {"arrows": "to", "from": "better Union Union", "label": "achieved by", "to": "5 European Union", "width": 1}, {"arrows": "to", "from": "what", "label": "go beyond", "to": "objectives", "width": 1}, {"arrows": "to", "from": "fundamental  right", "label": "safeguarded in particular", "to": "EU  2016/679", "width": 1}, {"arrows": "to", "from": "personal data processing", "label": "comply with", "to": "Regulation  2016/679", "width": 1}, {"arrows": "to", "from": "supervisory data authorities", "label": "are responsible", "to": "personal  Regulation", "width": 1}, {"arrows": "to", "from": "Data Protection Supervisor", "label": "consulted in", "to": "such Union Regulation", "width": 1}, {"arrows": "to", "from": "OP", "label": "apply from", "to": "months  Regulation", "width": 1}, {"arrows": "to", "from": "national building REV", "label": "ANNEX", "to": "32 sk EN", "width": 1}, {"arrows": "to", "from": "Directive", "label": "laying", "to": "technical Information Society services", "width": 1}, {"arrows": "to", "from": "furnished  that", "label": "means", "to": "short accommodation rental service", "width": 1}, {"arrows": "to", "from": "It", "label": "include", "to": "short Annex Regulation", "width": 1}, {"arrows": "to", "from": "4(6 Directive REV", "label": "means", "to": "35 sk EN", "width": 1}, {"arrows": "to", "from": "12", "label": "means", "to": "4  Regulation", "width": 1}, {"arrows": "to", "from": "registration procedure", "label": "comply with", "to": "national Member Chapter", "width": 1}, {"arrows": "to", "from": "such data transmission requirement", "label": "establish", "to": "competent registration territory", "width": 1}, {"arrows": "to", "from": "short term rental unit", "label": "required", "to": "so registration number", "width": 1}, {"arrows": "to", "from": "registration numbers", "label": "ensure", "to": "easily  registry", "width": 1}, {"arrows": "to", "from": "such  REV", "label": "offered as", "to": "38 sk EN", "width": 1}, {"arrows": "to", "from": "registered business registration that", "label": "are natural", "to": "legal contact telephone persons", "width": 1}, {"arrows": "to", "from": "competent mail authority", "label": "address", "to": "2", "width": 1}, {"arrows": "to", "from": "2(2)(a  submission", "label": "is without", "to": "registration Article", "width": 1}, {"arrows": "to", "from": "Where Member States", "label": "enable", "to": "term rental term services", "width": 1}, {"arrows": "to", "from": "Member this", "label": "update", "to": "4(2  point", "width": 1}, {"arrows": "to", "from": "4(2  unit", "label": "ensure", "to": "registry", "width": 1}, {"arrows": "to", "from": "competent  they", "label": "be responsible", "to": "7  Regulation", "width": 1}, {"arrows": "to", "from": "5(2  it", "label": "finds", "to": "undue registration delay", "width": 1}, {"arrows": "to", "from": "pursuant registration it", "label": "notify", "to": "intention", "width": 1}, {"arrows": "to", "from": "it", "label": "notify", "to": "paragraphs", "width": 1}, {"arrows": "to", "from": "2(2)(a  it", "label": "requires", "to": "such  information", "width": 1}, {"arrows": "to", "from": "clearly registration REV", "label": "ANNEX", "to": "43 sk EN", "width": 1}, {"arrows": "to", "from": "given registration lists", "label": "inform", "to": "13 Member Article", "width": 1}, {"arrows": "to", "from": "solely  assessment", "label": "make best", "to": "automated  Article", "width": 1}, {"arrows": "to", "from": "where Member unit", "label": "collect", "to": "specific registration listing", "width": 1}, {"arrows": "to", "from": "where Member unit", "label": "reach", "to": "national Member State", "width": 1}, {"arrows": "to", "from": "transmission", "label": "take", "to": "machine communication means", "width": 1}, {"arrows": "to", "from": "4(1 Member State", "label": "establish", "to": "pursuant term Article", "width": 1}, {"arrows": "to", "from": "same  information", "label": "provides for", "to": "rental registration Article", "width": 1}, {"arrows": "to", "from": "strictly  purpose", "label": "referred to", "to": "rental registration platforms", "width": 1}, {"arrows": "to", "from": "implementing  acts", "label": "adopted in", "to": "examination Article", "width": 1}, {"arrows": "to", "from": "national  coordinators", "label": "act as", "to": "respective Digital Entry Point", "width": 1}, {"arrows": "to", "from": "coordination group", "label": "composed of", "to": "national Member Commission", "width": 1}, {"arrows": "to", "from": "coordination group", "label": "adopt", "to": "procedure", "width": 1}, {"arrows": "to", "from": "coordination group", "label": "consult relevant", "to": "harmonised data sharing", "width": 1}, {"arrows": "to", "from": "particular coordination group", "label": "assist", "to": "common registration numbers", "width": 1}, {"arrows": "to", "from": "intended  purpose", "label": "granted", "to": "short Union law", "width": 1}, {"arrows": "to", "from": "Competent  authorities", "label": "listed pursuant", "to": "months activity receipt", "width": 1}, {"arrows": "to", "from": "Competent  authorities", "label": "promote", "to": "respective  territories", "width": 1}, {"arrows": "to", "from": "where business this", "label": "point", "to": "activities", "width": 1}, {"arrows": "to", "from": "available bed unit", "label": "designate", "to": "statistical European Council25", "width": 1}, {"arrows": "to", "from": "Access", "label": "be subject", "to": "appropriate data protection", "width": 1}, {"arrows": "to", "from": "public  lists", "label": "make public", "to": "paragraph", "width": 1}, {"arrows": "to", "from": "Chapter references", "label": "apply", "to": "7(1  Regulation", "width": 1}, {"arrows": "to", "from": "IV  they", "label": "cover", "to": "also Articles Regulation", "width": 1}, {"arrows": "to", "from": "Authorities", "label": "be competent", "to": "7(3 Digital Entry Regulation", "width": 1}, {"arrows": "to", "from": "Where  reference", "label": "made to", "to": "5  Regulation", "width": 1}, {"arrows": "to", "from": "following  point", "label": "amended", "to": "13 European Council", "width": 1}, {"arrows": "to", "from": "third accommodation rental following", "label": "amended", "to": "new registration number", "width": 1}, {"arrows": "to", "from": "report", "label": "based on", "to": "relevant Member Article", "width": 1}, {"arrows": "to", "from": "rental accommodation rental REV", "label": "assess in particular", "to": "55 sk EN", "width": 1}, {"arrows": "to", "from": "19  Regulation", "label": "Entry into", "to": "twentieth European Union", "width": 1}, {"arrows": "to", "from": "15693/1/23 COMPET.1 REV", "label": "ANNEX", "to": "56 sk EN", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
